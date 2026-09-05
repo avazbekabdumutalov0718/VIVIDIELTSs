@@ -95,12 +95,20 @@ const VividDB = (() => {
     return { data, error };
   }
 
-  // Exchanges a verified Telegram Login Widget payload for a Supabase session.
-  // Requires the `telegram-auth` Supabase Edge Function (see /supabase/functions/telegram-auth).
-  async function signInWithTelegram(telegramUser) {
+  // Exchanges a 6-digit code (sent to the user by the @vividielts_bot /login command)
+  // for a Supabase session. Requires the `telegram-code-login` Supabase Edge Function.
+  async function signInWithTelegramCode(code) {
     if (!client) return { error: { message: 'Supabase is not configured yet (see supabase-config.js).' } };
-    const { data, error } = await client.functions.invoke('telegram-auth', { body: telegramUser });
-    if (error) return { error };
+    const { data, error } = await client.functions.invoke('telegram-code-login', { body: { code } });
+    if (error) {
+      // Edge Function returned a non-2xx status — try to surface its JSON message.
+      let message = error.message || 'Could not verify that code.';
+      try {
+        const body = await error.context.json();
+        if (body?.error) message = body.error;
+      } catch (e) {}
+      return { error: { message } };
+    }
     if (data?.action_link) {
       window.location.href = data.action_link;
       return { data };
@@ -270,7 +278,7 @@ const VividDB = (() => {
   }
 
   return {
-    isConfigured, signUp, signIn, signInWithGoogle, signInWithTelegram, signOut, getSession, getUser,
+    isConfigured, signUp, signIn, signInWithGoogle, signInWithTelegramCode, signOut, getSession, getUser,
     getProfile, updateProfile,
     getLearnedWordIds, markWordLearned, unmarkWordLearned,
     getCollocationProgress, markCollocationUnitCompleted,

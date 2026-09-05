@@ -84,44 +84,43 @@ document.querySelectorAll('[data-oauth="google"]').forEach((btn) => {
   });
 });
 
-// ===== Telegram sign-in =====
-// Full setup (bot + Edge Function) is documented in /supabase/functions/telegram-auth/README.md.
-// Until TELEGRAM_BOT_USERNAME is set in supabase-config.js, the button just explains that.
-window.onTelegramAuth = async function onTelegramAuth(telegramUser) {
-  if (typeof VividDB === 'undefined' || !VividDB.isConfigured) {
-    setStatus('Supabase is not connected yet — see supabase-config.js.', true);
-    return;
-  }
-  setStatus('Verifying your Telegram account...', false);
-  const { error } = await VividDB.signInWithTelegram(telegramUser);
-  if (error) setStatus(error.message, true);
-};
-
-function mountTelegramWidget(container) {
-  if (typeof TELEGRAM_BOT_USERNAME === 'undefined' || !TELEGRAM_BOT_USERNAME) return false;
-  container.innerHTML = '';
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = 'https://telegram.org/js/telegram-widget.js?22';
-  script.setAttribute('data-telegram-login', TELEGRAM_BOT_USERNAME);
-  script.setAttribute('data-size', 'large');
-  script.setAttribute('data-radius', '10');
-  script.setAttribute('data-onauth', 'onTelegramAuth(user)');
-  script.setAttribute('data-request-access', 'write');
-  container.appendChild(script);
-  return true;
-}
-
+// ===== Telegram sign-in (bot sends a 6-digit code, user types it here) =====
+// Full setup is documented in /supabase/functions/telegram-code-login/README.md.
 document.querySelectorAll('[data-oauth="telegram"]').forEach((btn) => {
-  if (typeof TELEGRAM_BOT_USERNAME !== 'undefined' && TELEGRAM_BOT_USERNAME) {
-    const wrap = document.createElement('span');
-    btn.replaceWith(wrap);
-    mountTelegramWidget(wrap);
-  } else {
-    btn.addEventListener('click', () => {
-      setStatus("Telegram sign-in isn't set up yet — see /supabase/functions/telegram-auth/README.md for the 10-minute setup.", true);
-    });
-  }
+  btn.addEventListener('click', () => {
+    const panelId = btn.getAttribute('data-panel');
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+    panel.hidden = !panel.hidden;
+    if (!panel.hidden) {
+      const input = panel.querySelector('.telegram-code-input');
+      if (input) input.focus();
+    }
+  });
+});
+
+document.querySelectorAll('.telegram-code-submit').forEach((submitBtn) => {
+  submitBtn.addEventListener('click', async () => {
+    const panel = submitBtn.closest('.telegram-code-panel');
+    const input = panel.querySelector('.telegram-code-input');
+    const code = (input.value || '').trim();
+
+    if (!/^\d{6}$/.test(code)) {
+      setStatus('Please enter the 6-digit code the bot sent you.', true);
+      return;
+    }
+    if (typeof VividDB === 'undefined' || !VividDB.isConfigured) {
+      setStatus('Supabase is not connected yet — see supabase-config.js.', true);
+      return;
+    }
+
+    submitBtn.disabled = true;
+    setStatus('Verifying your code...', false);
+    const { error } = await VividDB.signInWithTelegramCode(code);
+    submitBtn.disabled = false;
+    if (error) setStatus(error.message, true);
+    // On success the browser is redirected straight to dashboard.html.
+  });
 });
 
 if (signupForm) {

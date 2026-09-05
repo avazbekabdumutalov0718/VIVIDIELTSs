@@ -421,6 +421,25 @@ h1,h2,h3{font-family: var(--font-display); letter-spacing:-0.02em; line-height:1
 .oauth-row{ display:flex; gap:10px; margin-bottom: 24px; }
 .oauth-row .btn{ display:flex; align-items:center; justify-content:center; gap:8px; }
 
+.telegram-code-panel{
+  background: var(--canvas-soft, #f6f5ff);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: -10px 0 20px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.telegram-code-panel p{ margin: 0 0 8px; }
+.telegram-code-panel a{ color: var(--violet); font-weight: 600; }
+.telegram-code-panel code{ background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 4px; }
+.telegram-code-panel .field-row{ margin-bottom: 0; gap: 10px; }
+.telegram-code-input{
+  flex: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line);
+  font-size: 1rem; letter-spacing: 2px; text-align: center;
+}
+.telegram-code-panel .btn{ white-space: nowrap; }
+
 .auth-switch{ text-align:center; font-size:0.9rem; color: var(--ink-soft); }
 .auth-switch a{ color: var(--violet); font-weight:600; }
 

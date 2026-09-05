@@ -6,8 +6,6 @@
 const SUPABASE_URL = 'https://dopccjigpfhukjthrvnf.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_468151fmhwrkteGeN1J23A_opBgehxg';
 
-// Optional: Telegram Login Widget. Create a bot with @BotFather, run
-// /setdomain on it pointing to this site's domain, then put the bot's
-// @username (without the @) below. Leave empty to keep the Telegram
-// button disabled. Full walkthrough: /supabase/functions/telegram-auth/README.md
-const TELEGRAM_BOT_USERNAME = 'vividielts_bot';
+// Telegram login works via a bot command (@vividielts_bot → /login → 6-digit
+// code typed into the site) rather than a widget, so no config is needed
+// here. Setup walkthrough: /supabase/functions/telegram-code-login/README.md

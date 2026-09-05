@@ -1,59 +1,46 @@
-# Telegram sign-in — setup (about 10 minutes)
+# Telegram sign-in via bot code — setup
 
-This lets a user tap "Log in with Telegram" and land signed in, without you
-running your own bot server. Telegram's official Login Widget does the
-identity check on Telegram's side; this Edge Function double-checks that
-signature (never trust it unverified) and turns it into a real Supabase
-session.
+The user sends `/login` to @vividielts_bot (or taps "🔐 Saytga kirish kodi" in
+the bot menu). The bot makes up a 6-digit code, writes it to Supabase, and
+sends it to the user. The user types that code into the site, which asks
+this Edge Function to check it and sign them in. No Telegram widget, no
+BotFather `/setdomain` needed — it works on any domain, including
+`127.0.0.1` while testing locally.
 
-## 1. Create the bot
-1. In Telegram, message **@BotFather** → `/newbot` → follow the prompts.
-2. Note the **bot token** it gives you (looks like `123456789:AA...`).
-3. Still in BotFather: `/setdomain` → choose your bot → enter the exact
-   domain your site is served from (e.g. `vividielts.uz`, or
-   `127.0.0.1:5500` while testing locally — Telegram does allow localhost
-   domains for widget testing).
+## 1. Run the schema update
+In the Supabase SQL editor, re-run `schema.sql` (safe to re-run — it only
+adds things that don't already exist). This creates the
+`telegram_login_codes` table the bot writes codes into.
 
-## 2. Deploy the Edge Function
+## 2. Deploy this function
 ```bash
-supabase login
-supabase link --project-ref <your-project-ref>
-supabase secrets set TELEGRAM_BOT_TOKEN=123456789:AA...your-token
-supabase functions deploy telegram-auth
+supabase functions deploy telegram-code-login
 ```
-`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically —
-you don't set those yourself.
+No new secrets needed — it reuses `SUPABASE_URL` and
+`SUPABASE_SERVICE_ROLE_KEY`, which every Edge Function already has.
 
-## 3. Run the schema update
-In the Supabase SQL editor, re-run `schema.sql` (it's safe to run again —
-the new parts use `if not exists`). This adds a `telegram_id` column to
-`profiles` so a Telegram account can be linked to a profile row.
-
-## 4. Turn the widget on
-In `supabase-config.js`, set:
-```js
-const TELEGRAM_BOT_USERNAME = 'your_bot_username'; // no @
-```
-That's it — `auth.js` will swap the placeholder "Telegram" button for
-Telegram's real widget automatically once this is set.
+## 3. Update the bot
+Replace your bot's `bot.js` with the updated version (adds the `/login`
+command and a "🔐 Saytga kirish kodi" button, using the same
+`SUPABASE_SERVICE_ROLE_KEY` the bot already has). Redeploy on Render as
+usual (push to the bot's repo, or upload the file — however you deploy it
+today).
 
 ## How it works
-1. User taps the Telegram widget → a Telegram popup confirms their
-   identity → Telegram calls back into the page with a signed payload
-   (id, name, `auth_date`, `hash`).
-2. The page sends that payload to the `telegram-auth` Edge Function.
-3. The function recomputes the HMAC-SHA256 hash using your bot token
-   (kept server-side only) and rejects anything that doesn't match or is
-   older than 5 minutes — this is what stops someone from faking or
-   replaying a Telegram login.
-4. On a valid payload, it finds or creates the matching Supabase user
-   (linked via `profiles.telegram_id`) and returns a one-time sign-in
-   link, which the browser follows to become a normal authenticated
-   session — from then on it behaves exactly like an email/password or
-   Google user.
+1. User sends `/login` → bot generates a random 6-digit code and inserts a
+   row into `telegram_login_codes` (code, telegram_id, full_name,
+   expires_at = now + 5 minutes) using its service-role key.
+2. Bot sends the code back to the user in the chat.
+3. User types the code into the site's Telegram panel → the site calls this
+   function with `{ code }`.
+4. This function checks the code exists, is unused, and hasn't expired,
+   marks it used, then finds or creates the matching Supabase user (linked
+   via `profiles.telegram_id`) and returns a one-time sign-in link.
+5. The browser follows that link and becomes a normal authenticated
+   session — same as an email/password or Google user from then on.
 
-## Why this couldn't be done purely in the browser
-Verifying a Telegram login requires the bot token, and anything sent to
-the browser can be read by the browser. If the verification ran client-side,
-anyone could fabricate a valid-looking payload for any Telegram account.
-That's why this step lives in an Edge Function instead of `auth.js`.
+## Why the code can't be checked in the browser
+Only the bot (with its bot token) and this function (with the service-role
+key) can be trusted to say "this code is genuinely tied to this Telegram
+account." Checking it client-side would mean shipping a secret key to every
+visitor's browser, which anyone could then use to forge access.

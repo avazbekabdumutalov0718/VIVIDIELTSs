@@ -1,73 +1,82 @@
-// Supabase Edge Function: telegram-auth
+// Supabase Edge Function: telegram-code-login
 //
-// Verifies the payload sent by the Telegram Login Widget (this is the ONLY
-// place that is allowed to trust "this really is Telegram user X", because
-// it's the only place that holds the bot token secret) and then either
-// creates or logs in the matching Supabase user, returning a one-time
-// action_link the browser can redirect to to become signed in.
+// The bot (@vividielts_bot, /login command) generates a random 6-digit code
+// and writes it to public.telegram_login_codes using its service-role key.
+// This function is what the WEBSITE calls once the user types that code in:
+// it checks the code is real, unused and not expired, marks it used, then
+// finds or creates the matching Supabase user and returns a one-time sign-in
+// link the browser can follow.
 //
 // Deploy:
-//   supabase functions deploy telegram-auth
-// Secrets (Project Settings → Edge Functions → Secrets, or via CLI):
-//   supabase secrets set TELEGRAM_BOT_TOKEN=123456:ABC-yourBotFatherToken
-//   (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are already available
-//    automatically inside every Edge Function.)
+//   supabase functions deploy telegram-code-login
+// (No new secrets needed — it reuses SUPABASE_URL and
+//  SUPABASE_SERVICE_ROLE_KEY, which every Edge Function already has.)
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const TELEGRAM_BOT_TOKEN = Deno.env.get('TELEGRAM_BOT_TOKEN')!;
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
-async function sha256(input: Uint8Array): Promise<Uint8Array> {
-  return new Uint8Array(await crypto.subtle.digest('SHA-256', input));
-}
-
-async function hmacSha256(key: Uint8Array, message: string): Promise<string> {
-  const cryptoKey = await crypto.subtle.importKey(
-    'raw', key, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'],
-  );
-  const sig = await crypto.subtle.sign('HMAC', cryptoKey, new TextEncoder().encode(message));
-  return Array.from(new Uint8Array(sig)).map((b) => b.toString(16).padStart(2, '0')).join('');
-}
-
-// Telegram's own verification recipe: https://core.telegram.org/widgets/login#checking-authorization
-async function verifyTelegramPayload(payload: Record<string, unknown>): Promise<boolean> {
-  const { hash, ...rest } = payload as Record<string, string>;
-  if (!hash) return false;
-
-  // auth_date must be recent (5 minutes) so an intercepted payload can't be replayed later.
-  const authDate = Number(rest.auth_date || 0);
-  if (!authDate || Date.now() / 1000 - authDate > 300) return false;
-
-  const dataCheckString = Object.keys(rest)
-    .sort()
-    .map((k) => `${k}=${rest[k]}`)
-    .join('\n');
-
-  const secretKey = await sha256(new TextEncoder().encode(TELEGRAM_BOT_TOKEN));
-  const computedHash = await hmacSha256(secretKey, dataCheckString);
-  return computedHash === hash;
-}
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   try {
-    const payload = await req.json();
-    const ok = await verifyTelegramPayload(payload);
-    if (!ok) {
-      return new Response(JSON.stringify({ error: 'Invalid or expired Telegram signature.' }), { status: 401 });
+    const { code } = await req.json();
+    const cleanCode = String(code || '').trim();
+
+    if (!/^\d{6}$/.test(cleanCode)) {
+      return new Response(JSON.stringify({ error: "That doesn't look like a 6-digit code." }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
-    const telegramId = Number(payload.id);
-    const fullName = [payload.first_name, payload.last_name].filter(Boolean).join(' ') || payload.username || 'IELTS Student';
+    const { data: row, error: lookupErr } = await admin
+      .from('telegram_login_codes')
+      .select('*')
+      .eq('code', cleanCode)
+      .maybeSingle();
+
+    if (lookupErr) throw lookupErr;
+
+    if (!row) {
+      return new Response(JSON.stringify({ error: 'That code is not valid. Ask the bot for a new one.' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    if (row.used) {
+      return new Response(JSON.stringify({ error: 'That code has already been used. Ask the bot for a new one.' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    if (new Date(row.expires_at).getTime() < Date.now()) {
+      return new Response(JSON.stringify({ error: 'That code has expired. Ask the bot for a new one.' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Mark the code used immediately so it can't be replayed.
+    await admin.from('telegram_login_codes').update({ used: true }).eq('code', cleanCode);
+
+    const telegramId = row.telegram_id;
+    const fullName = row.full_name || 'IELTS Student';
 
     // A synthetic, never-shown email so Telegram-only users still fit Supabase's
     // email-based auth model. It is never sent anywhere or displayed to the user.
     const syntheticEmail = `telegram-${telegramId}@telegram.vividielts.local`;
 
-    // Do we already have a profile linked to this Telegram account?
     const { data: existingProfile } = await admin
       .from('profiles')
       .select('id')
@@ -89,7 +98,6 @@ Deno.serve(async (req) => {
       await admin.from('profiles').update({ telegram_id: telegramId, full_name: fullName }).eq('id', userId);
     }
 
-    // Mint a one-time magic link the browser can follow to become an authenticated session.
     const { data: linkData, error: linkErr } = await admin.auth.admin.generateLink({
       type: 'magiclink',
       email: syntheticEmail,
@@ -97,9 +105,12 @@ Deno.serve(async (req) => {
     if (linkErr) throw linkErr;
 
     return new Response(JSON.stringify({ action_link: linkData.properties.action_link }), {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    return new Response(JSON.stringify({ error: String(err?.message || err) }), { status: 500 });
+    return new Response(JSON.stringify({ error: String(err?.message || err) }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 });
