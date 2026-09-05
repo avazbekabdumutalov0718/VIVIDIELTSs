@@ -98,9 +98,11 @@ Deno.serve(async (req) => {
       await admin.from('profiles').update({ telegram_id: telegramId, full_name: fullName }).eq('id', userId);
     }
 
+    const SITE_URL = Deno.env.get('SITE_URL') || 'https://vividielt-ss.vercel.app';
     const { data: linkData, error: linkErr } = await admin.auth.admin.generateLink({
       type: 'magiclink',
       email: syntheticEmail,
+      options: { redirectTo: `${SITE_URL}/dashboard.html` },
     });
     if (linkErr) throw linkErr;
 

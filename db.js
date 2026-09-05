@@ -143,8 +143,9 @@ const VividDB = (() => {
 
   async function updateProfile(fields) {
     const user = await getUser();
-    if (!client || !user) return;
-    await client.from('profiles').update(fields).eq('id', user.id);
+    if (!client || !user) return { error: null };
+    const { data, error } = await client.from('profiles').update(fields).eq('id', user.id).select().maybeSingle();
+    return { data, error };
   }
 
   // ---------- VOCAB PROGRESS ----------
