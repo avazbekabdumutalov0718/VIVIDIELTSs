@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Full Reading Test 6</title>
+<link rel="stylesheet" href="reading-test-common.css">
+<style>
+  :root { --bg: #ffffff; --bg-alt: #f4f5f7; --bg-panel: #ffffff; --text: #111111; --text-muted: #555; --border: #d4d4d4; --border-strong: #333; --accent: #e51e2a; --select-bg: #cfe3ff; --select-active: #1e6cd8; --footer-bg: #f4f5f7; --btn-bg: #ededed; --arrow-bg: #1f1f1f; --arrow-fg: #ffffff; --correct: #1a8a3c; --wrong: #cc2222; }
+  body.dark { --bg: #1a1a1d; --bg-alt: #232327; --bg-panel: #1f1f22; --text: #ececec; --text-muted: #b5b5b5; --border: #3a3a3f; --border-strong: #cfcfcf; --accent: #ff5c66; --select-bg: #2c4d7a; --select-active: #4a8be0; --footer-bg: #232327; --btn-bg: #2e2e33; --arrow-bg: #ececec; --arrow-fg: #1a1a1d; --correct: #4ed684; --wrong: #ff6b6b; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+  .topbar { height: 50px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; background: var(--bg); position: relative; z-index: 5; }
+  .logo { font-weight: 800; font-size: 22px; color: var(--accent); margin-right: 20px; }
+  .test-taker { font-size: 14px; font-weight: 700; }
+  .top-controls { margin-left: auto; display: flex; gap: 2px; align-items: center; }
+  .top-controls .icon-btn, .top-controls .text-btn { background: transparent; border: none; color: var(--text); padding: 6px 10px; cursor: pointer; border-radius: 4px; }
+  .part-header { background: var(--bg-alt); border-bottom: 1px solid var(--border); padding: 10px 20px; }
+  .part-header h2 { margin: 0 0 3px 0; font-size: 14px; font-weight: 700; }
+  .main { position: absolute; top: 50px; left: 0; right: 0; bottom: 50px; display: flex; flex-direction: column; }
+  .panes { flex: 1; display: flex; overflow: hidden; position: relative; }
+  .pane { overflow-y: auto; padding: 18px 28px; background: var(--bg-panel); line-height: 1.55; font-size: calc(14.5px * var(--font-scale, 1)); }
+  .pane.left { width: 50%; }
+  .pane.right { flex: 1; }
+  .splitter { width: 10px; background: var(--bg-alt); border-left: 1px solid var(--border); border-right: 1px solid var(--border); cursor: col-resize; flex-shrink: 0; }
+  .passage h1 { font-size: 16px; font-weight: 700; margin: 0 0 14px 0; text-align: center; }
+  .qblock { margin-bottom: 28px; }
+  .qblock h3 { margin: 0 0 6px 0; font-size: 14.5px; font-weight: 700; }
+  .instructions { font-size: 13px; margin-bottom: 12px; line-height: 1.6; }
+  .yn-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; padding: 6px 8px; border-radius: 4px; }
+  .qnum-yn { min-width: 22px; font-weight: 700; border: 1px solid var(--border-strong); padding: 0 4px; text-align: center; font-size: 12px; }
+  .yn-stem { flex: 1; font-size: 14px; }
+  .yn-select { background: var(--bg); color: var(--text); border: 1px solid var(--border-strong); padding: 4px 6px; font-size: 13px; border-radius: 3px; min-width: 110px; }
+  .text-gap { background: var(--bg); color: var(--text); border: none; border-bottom: 2px solid var(--border-strong); padding: 2px 6px; font-size: 13px; width: 140px; text-align: center; outline: none; }
+  .footer { position: absolute; bottom: 0; left: 0; right: 0; height: 50px; background: var(--footer-bg); border-top: 1px solid var(--border); display: flex; align-items: center; padding: 0 12px; gap: 8px; z-index: 4; }
+  .part-tab { display: flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 3px; border: 1px solid var(--border); background: var(--bg); cursor: pointer; }
+  .part-tab.active { border-color: var(--accent); background: var(--bg-alt); }
+  .check-btn { width: 36px; height: 32px; background: var(--btn-bg); color: var(--text); border: 1px solid var(--border); border-radius: 2px; cursor: pointer; font-size: 16px; margin-left: 4px; }
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: flex-start; justify-content: center; z-index: 100; padding: 20px; overflow-y: auto; }
+  .overlay.visible { display: flex; }
+  .modal { background: var(--bg-panel); color: var(--text); border: 1px solid var(--border); border-radius: 8px; max-width: 600px; width: 100%; padding: 28px 32px; margin: auto; }
+  .results-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 18px; }
+  .results-table th, .results-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">IELTS</div>
+  <div class="test-taker">VIVID IELTS — Full Mock 3</div>
+  <div class="top-controls">
+    <button id="btn-light" class="icon-btn">☀️</button>
+    <button id="btn-dark" class="icon-btn">🌙</button>
+    <div class="divider"></div>
+    <button id="btn-font-down" class="text-btn">A-</button>
+    <button id="btn-font-up" class="text-btn">A+</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="part-header">
+    <h2 id="partTitle">Part 1 — Flying the Coast</h2>
+    <p>Read the text and answer questions 1–13.</p>
+  </div>
+  <div class="panes">
+
+    <!-- PASSAGES -->
+    <div class="pane left" id="passagePane">
+      <div id="p1" class="passage">
+        <h1>Flying the Coast</h1>
+        <p>Cut off from the rest of the country by a range of mountains, the west coast of New Zealand's South Island - or the "Coast" as it is commonly known - was the country's "wild west" frontier. But unlike Fiordland to the south, which was and still is an uninhabitable wilderness, the Coast in the 1930s was not only habitable, it was also potentially rich...</p>
+        <p>Maurice Buckley, a World War I pilot, was the first to give Coasters such wings, by establishing the Arrow Aviation Company in 1923...</p>
+        <p>Next came an aviator named Bert Mercer, who made a reconnaissance flight to the Coast in August 1933 and started Air Travel (NZ)...</p>
+      </div>
+
+      <div id="p2" class="passage hidden">
+        <h1>Who wrote Shakespeare's plays?</h1>
+        <p><strong>A</strong> Even today, almost 400 years after his death, the works of the famous English dramatist William Shakespeare have lost none of their appeal. But after long debate, researchers are turning to scientific methods like 'stylometry' to resolve controversies...</p>
+        <p><strong>B</strong> The idea dates back to 1851, when Augustus de Morgan suggested authors might be identified through word length frequency.</p>
+        <p><strong>C</strong> As long ago as 1785, Sir Francis Bacon was identified as a possible contender for having written Shakespeare's works...</p>
+      </div>
+
+      <div id="p3" class="passage hidden">
+        <h1>Saving languages</h1>
+        <p><strong>A</strong> Ten years ago, Michael Krauss predicted that half the 6,000 languages spoken in the world would disappear within a century...</p>
+        <p><strong>B</strong> Outwardly, language consolidation might seem like a good trend that could ease ethnic tensions, but linguists mourn the loss of rare languages...</p>
+      </div>
+    </div>
+
+    <div class="splitter" id="splitter"></div>
+
+    <!-- QUESTIONS -->
+    <div class="pane right" id="questionsPane">
+
+      <!-- PART 1 QUESTIONS -->
+      <div id="qset1" class="qblock-set">
+        <div class="qblock">
+          <h3>Questions 1–6: True / False / Not Given</h3>
+          <div class="yn-row"><span class="qnum-yn">1</span><span class="yn-stem">The Coast and Fiordland had populations of similar size in the 1930s.</span><select class="yn-select question" data-q="1"><option value=""></option><option value="TRUE">TRUE</option><option value="FALSE">FALSE</option><option value="NOT GIVEN">NOT GIVEN</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">2</span><span class="yn-stem">Most settlers on the Coast were migrants from overseas.</span><select class="yn-select question" data-q="2"><option value=""></option><option value="TRUE">TRUE</option><option value="FALSE">FALSE</option><option value="NOT GIVEN">NOT GIVEN</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">3</span><span class="yn-stem">Geographical features made moving around difficult.</span><select class="yn-select question" data-q="3"><option value=""></option><option value="TRUE">TRUE</option><option value="FALSE">FALSE</option><option value="NOT GIVEN">NOT GIVEN</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">4</span><span class="yn-stem">First bridges were swept away by floods.</span><select class="yn-select question" data-q="4"><option value=""></option><option value="TRUE">TRUE</option><option value="FALSE">FALSE</option><option value="NOT GIVEN">NOT GIVEN</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">5</span><span class="yn-stem">Maurice Buckley flew his biplane to the Coast in 1923.</span><select class="yn-select question" data-q="5"><option value=""></option><option value="TRUE">TRUE</option><option value="FALSE">FALSE</option><option value="NOT GIVEN">NOT GIVEN</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">6</span><span class="yn-stem">Coasters were unwilling to fly at first.</span><select class="yn-select question" data-q="6"><option value=""></option><option value="TRUE">TRUE</option><option value="FALSE">FALSE</option><option value="NOT GIVEN">NOT GIVEN</option></select></div>
+        </div>
+        <div class="qblock">
+          <h3>Questions 7–13: Notes Completion</h3>
+          <p>7. <input type="text" class="text-gap question" data-q="7"></p>
+          <p>8. <input type="text" class="text-gap question" data-q="8"></p>
+          <p>9. <input type="text" class="text-gap question" data-q="9"></p>
+          <p>10. <input type="text" class="text-gap question" data-q="10"></p>
+          <p>11. <input type="text" class="text-gap question" data-q="11"></p>
+          <p>12. <input type="text" class="text-gap question" data-q="12"></p>
+          <p>13. <input type="text" class="text-gap question" data-q="13"></p>
+        </div>
+      </div>
+
+      <!-- PART 2 QUESTIONS -->
+      <div id="qset2" class="qblock-set hidden">
+        <div class="qblock">
+          <h3>Questions 14–19: Paragraph Matching</h3>
+          <div class="yn-row"><span class="qnum-yn">14</span><span class="yn-stem">Uncertainty why author wished to stay anonymous</span><select class="yn-select question" data-q="14"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">15</span><span class="yn-stem">Continuing popularity of Shakespeare's work</span><select class="yn-select question" data-q="15"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">16</span><span class="yn-stem">Reasons approach proved unsatisfactory</span><select class="yn-select question" data-q="16"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">17</span><span class="yn-stem">Time when stylometry was first proposed</span><select class="yn-select question" data-q="17"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">18</span><span class="yn-stem">Shakespeare grew more skilful over time</span><select class="yn-select question" data-q="18"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">19</span><span class="yn-stem">Similarity between Shakespeare and Einstein</span><select class="yn-select question" data-q="19"><option value=""></option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option><option value="G">G</option></select></div>
+        </div>
+        <div class="qblock">
+          <h3>Questions 20–22: Summary Completion</h3>
+          <p>20. <input type="text" class="text-gap question" data-q="20"></p>
+          <p>21. <input type="text" class="text-gap question" data-q="21"></p>
+          <p>22. <input type="text" class="text-gap question" data-q="22"></p>
+        </div>
+        <div class="qblock">
+          <h3>Questions 23–26: People Matching</h3>
+          <div class="yn-row"><span class="qnum-yn">23</span><span class="yn-stem">People search for distinguished author:</span><select class="yn-select question" data-q="23"><option value=""></option><option value="C">C. Professor Kate McLuskie</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">24</span><span class="yn-stem">Recognise writers by word length:</span><select class="yn-select question" data-q="24"><option value=""></option><option value="A">A. Thomas Mendenhall</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">25</span><span class="yn-stem">Texts altered over years:</span><select class="yn-select question" data-q="25"><option value=""></option><option value="E">E. Dr Markus Dahl</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">26</span><span class="yn-stem">Style differs from suggested claimants:</span><select class="yn-select question" data-q="26"><option value=""></option><option value="B">B. Ward Elliott & Robert Valenza</option></select></div>
+        </div>
+      </div>
+
+      <!-- PART 3 QUESTIONS -->
+      <div id="qset3" class="qblock-set hidden">
+        <div class="qblock">
+          <h3>Questions 27–33: Headings Matching</h3>
+          <div class="yn-row"><span class="qnum-yn">27</span><span class="yn-stem">Paragraph A</span><select class="yn-select question" data-q="27"><option value=""></option><option value="x">x</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">28</span><span class="yn-stem">Paragraph B</span><select class="yn-select question" data-q="28"><option value=""></option><option value="ii">ii</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">29</span><span class="yn-stem">Paragraph C</span><select class="yn-select question" data-q="29"><option value=""></option><option value="ix">ix</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">30</span><span class="yn-stem">Paragraph E</span><select class="yn-select question" data-q="30"><option value=""></option><option value="iv">iv</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">31</span><span class="yn-stem">Paragraph F</span><select class="yn-select question" data-q="31"><option value=""></option><option value="vii">vii</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">32</span><span class="yn-stem">Paragraph G</span><select class="yn-select question" data-q="32"><option value=""></option><option value="viii">viii</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">33</span><span class="yn-stem">Paragraph H</span><select class="yn-select question" data-q="33"><option value=""></option><option value="i">i</option></select></div>
+        </div>
+        <div class="qblock">
+          <h3>Questions 34–38: Opinion Matching</h3>
+          <div class="yn-row"><span class="qnum-yn">34</span><span class="yn-stem">California scheme not enough tutors:</span><select class="yn-select question" data-q="34"><option value=""></option><option value="E">E. Leanne Hinton</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">35</span><span class="yn-stem">Decisions needed about rescue priorities:</span><select class="yn-select question" data-q="35"><option value=""></option><option value="D">D. Sarah G Thomason</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">36</span><span class="yn-stem">Languages face extinction within century:</span><select class="yn-select question" data-q="36"><option value=""></option><option value="A">A. Michael Krauss</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">37</span><span class="yn-stem">Solution is multilingualism:</span><select class="yn-select question" data-q="37"><option value=""></option><option value="C">C. James Matisoff</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">38</span><span class="yn-stem">Speakers regard language as inferior:</span><select class="yn-select question" data-q="38"><option value=""></option><option value="G">G. Hans-Jurgen Sasse</option></select></div>
+        </div>
+        <div class="qblock">
+          <h3>Questions 39–40: Multiple Choice</h3>
+          <div class="yn-row"><span class="qnum-yn">39</span><span class="yn-stem">Alaskan Language Center purpose:</span><select class="yn-select question" data-q="39"><option value=""></option><option value="C">C. Prevent further loss of indigenous languages</option></select></div>
+          <div class="yn-row"><span class="qnum-yn">40</span><span class="yn-stem">Majority language speakers:</span><select class="yn-select question" data-q="40"><option value=""></option><option value="D">D. Should be more tolerant of minority languages</option></select></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="part-tab active" id="tab1" onclick="switchPart(1)"><span class="label">Part 1</span><span class="progress" id="prog1">0/13</span></div>
+  <div class="part-tab" id="tab2" onclick="switchPart(2)"><span class="label">Part 2</span><span class="progress" id="prog2">0/13</span></div>
+  <div class="part-tab" id="tab3" onclick="switchPart(3)"><span class="label">Part 3</span><span class="progress" id="prog3">0/14</span></div>
+  <button class="check-btn" id="finishBtn" title="Submit">&#10003;</button>
+</div>
+
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+
+<script>
+const TOTAL = 40;
+const KEY = {
+  1:'FALSE',2:'NOT GIVEN',3:'TRUE',4:'NOT GIVEN',5:'FALSE',6:'FALSE',
+  7:'LUXURY',8:'MAIL',9:'BEACHES',10:'SUBSIDY',11:'PILOTS',12:'CARGO',13:'HELICOPTERS',
+  14:'C',15:'A',16:'C',17:'B',18:'G',19:'A',20:'COLLABORATION',21:'COMPUTERS',22:'FINGERPRINT',23:'C',24:'A',25:'E',26:'B',
+  27:'X',28:'II',29:'IX',30:'IV',31:'VII',32:'VIII',33:'I',34:'E',35:'D',36:'A',37:'C',38:'G',39:'C',40:'D'
+};
+
+const answers = {};
+function normalize(v) { return (v || '').toString().trim().toUpperCase().replace(/\s+/g, ' '); }
+function isCorrect(n, val) { return normalize(KEY[n]) === normalize(val); }
+
+document.querySelectorAll('select.question, input.question').forEach(el => {
+  const q = +el.dataset.q;
+  el.addEventListener('change', () => { answers[q] = el.value; updateProgress(); });
+  el.addEventListener('input', () => { answers[q] = el.value; updateProgress(); });
+});
+
+function updateProgress() {
+  let p1 = 0, p2 = 0, p3 = 0;
+  for (let i = 1; i <= 13; i++) if (answers[i]) p1++;
+  for (let i = 14; i <= 26; i++) if (answers[i]) p2++;
+  for (let i = 27; i <= 40; i++) if (answers[i]) p3++;
+  document.getElementById('prog1').textContent = `${p1}/13`;
+  document.getElementById('prog2').textContent = `${p2}/13`;
+  document.getElementById('prog3').textContent = `${p3}/14`;
+}
+
+function switchPart(part) {
+  document.querySelectorAll('.passage, .qblock-set, .part-tab').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('.part-tab').forEach(t => t.classList.remove('active'));
+
+  document.getElementById(`p${part}`).classList.remove('hidden');
+  document.getElementById(`qset${part}`).classList.remove('hidden');
+  document.getElementById(`tab${part}`).classList.add('active');
+
+  const titles = ['Part 1 — Flying the Coast', "Part 2 — Shakespeare's Plays", 'Part 3 — Saving Languages'];
+  document.getElementById('partTitle').textContent = titles[part - 1];
+}
+
+function getBand(score) {
+  if (score >= 39) return '9.0';
+  if (score >= 37) return '8.5';
+  if (score >= 35) return '8.0';
+  if (score >= 33) return '7.5';
+  if (score >= 30) return '7.0';
+  if (score >= 27) return '6.5';
+  if (score >= 23) return '6.0';
+  if (score >= 19) return '5.5';
+  return '5.0';
+}
+
+function showResults() {
+  let score = 0;
+  const rows = [];
+  for (let n = 1; n <= TOTAL; n++) {
+    const ok = isCorrect(n, answers[n]);
+    if (ok) score++;
+    rows.push({ n, given: answers[n] || '—', correct: KEY[n], ok });
+  }
+  const pct = Math.round(score / TOTAL * 100);
+  const band = getBand(score);
+
+  let html = `<h2>Your Results</h2>
+    <div class="score-row">${score} / ${TOTAL} (${pct}%)</div>
+    <div style="text-align:center;font-weight:700;margin-bottom:14px;">Estimated Band: ${band}</div>
+    <table class="results-table">
+      <thead><tr><th>Q</th><th>Your Answer</th><th>Correct</th><th></th></tr></thead><tbody>`;
+  rows.forEach(r => {
+    html += `<tr><td><strong>${r.n}</strong></td><td>${r.given}</td><td>${r.correct}</td><td>${r.ok ? '✓' : '✗'}</td></tr>`;
+  });
+  html += `</tbody></table>
+    <div style="text-align:center;"><button onclick="document.getElementById('overlay').classList.remove('visible')">Review</button></div>`;
+
+  document.getElementById('modal').innerHTML = html;
+  document.getElementById('overlay').classList.add('visible');
+}
+
+document.getElementById('finishBtn').addEventListener('click', () => {
+  if (confirm('Submit Full Mock Exam?')) showResults();
+});
+
+document.getElementById('btn-dark').addEventListener('click', () => document.body.classList.add('dark'));
+document.getElementById('btn-light').addEventListener('click', () => document.body.classList.remove('dark'));
+</script>
+</body>
+</html>

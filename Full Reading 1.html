@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Full Reading Test 1</title>
+<style>
+/* CSS Reset & Base Styles */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+    --bg-color: #ffffff; --text-color: #000000; --header-bg: #ffffff;
+    --border-color: #e0e0e0; --panel-bg: #ffffff; --question-bg: #ffffff;
+    --input-bg: #ffffff; --input-border: #bfbfbf; --input-focus: #3581d8;
+    --correct-color: #28a745; --incorrect-color: #dc3545; --highlight-bg: #ffff00;
+    --modal-bg: #ffffff; --nav-bg: #ffffff; --resizer-bg: #f0f0f0;
+    --part-header-bg: #f1f2ec; --timer-bg: #f0f0f0; --link-color: #1e88e5;
+    --shadow-color: rgba(0,0,0,0.1); --table-border: #ddd; --table-header-bg: #007bff;
+    --table-cell-bg: #fafafa; --logo-brightness: 1;
+}
+[data-theme="dark"] {
+    --bg-color: #1a1a1a; --text-color: #e0e0e0; --header-bg: #2d2d2d;
+    --border-color: #444444; --panel-bg: #2d2d2d; --question-bg: #333333;
+    --input-bg: #3a3a3a; --input-border: #555555; --input-focus: #4a90e2;
+    --correct-color: #2ecc71; --incorrect-color: #e74c3c; --highlight-bg: #ffeb3b;
+    --modal-bg: #2d2d2d; --nav-bg: #2d2d2d; --resizer-bg: #444444;
+    --part-header-bg: #3a3a3a; --timer-bg: #444444; --link-color: #64b5f6;
+    --shadow-color: rgba(0,0,0,0.3); --table-border: #555; --table-header-bg: #0056b3;
+    --table-cell-bg: #3a3a3a; --logo-brightness: 0;
+}
+body { font-family: Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.4; font-size: 16px; transition: background-color 0.3s, color 0.3s; }
+.header { background-color: var(--header-bg); padding: 12px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 60px; }
+.header-left, .header-right { display: flex; align-items: center; gap: 20px; }
+.ielts-logo { height: 30px; width: auto; filter: brightness(var(--logo-brightness, 1)); }
+.timer-container { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 500; color: var(--text-color); }
+.timer-display { font-weight: 600; min-width: 60px; }
+.timer-controls { display: flex; gap: 8px; }
+.timer-controls button, .dark-mode-btn { background: var(--timer-bg); border: 1px solid var(--border-color); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.main-container { margin-top: 60px; display: flex; flex-direction: column; background: var(--bg-color); height: calc(100vh - 60px); position: relative; }
+.panels-container { display: flex; flex: 1; overflow: hidden; }
+.passage-panel, .questions-panel { flex: 1; padding: 20px 20px 100px; overflow-y: auto; min-width: 200px; background-color: var(--panel-bg); }
+.questions-panel { border-left: 1px solid var(--border-color); }
+.resizer { width: 10px; cursor: col-resize; background-color: var(--resizer-bg); flex-shrink: 0; }
+.text-center { text-align: center; }
+.reading-passage h4 { font-size: 20px; font-weight: bold; margin-bottom: 15px; text-align: center; color: var(--text-color); }
+.reading-passage p { margin-bottom: 1.2em; color: var(--text-color); }
+.question { margin-bottom: 40px; }
+.answer-input { border: 1px solid var(--input-border); border-radius: 4px; background-color: var(--input-bg); padding: 2px 8px; font-size: 16px; font-weight: 700; height: 28px; min-width: 150px; color: var(--text-color); }
+.answer-input.correct { border-color: var(--correct-color); background-color: rgba(40, 167, 69, 0.1); }
+.answer-input.incorrect { border-color: var(--incorrect-color); background-color: rgba(220, 53, 69, 0.1); }
+.part-header { background-color: var(--part-header-bg); padding: 15px 20px; border: 1px solid var(--border-color); margin: 10px 20px; border-radius: 5px; }
+.tf-question { margin-bottom: 25px; padding: 10px 0px; }
+.tf-question-line { display: flex; align-items: flex-start; margin-bottom: 15px; }
+.tf-question-number { border: 2px solid var(--border-color); padding: 2px 8px; margin-right: 10px; border-radius: 3px; font-weight: bold; }
+.tf-option, .multi-choice-option { display: flex; align-items: center; padding: 10px 12px; background-color: var(--input-bg); border: 1px solid var(--border-color); border-radius: 4px; margin-bottom: 5px; cursor: pointer; }
+.tf-option.correct, .multi-choice-option.correct { background-color: rgba(40, 167, 69, 0.2) !important; border-color: var(--correct-color) !important; }
+.tf-option.incorrect, .multi-choice-option.incorrect { background-color: rgba(220, 53, 69, 0.2) !important; border-color: var(--incorrect-color) !important; }
+
+/* Bottom Nav bar styling for IELTS CD format */
+.nav-row { position: fixed; bottom: 0; left: 0; right: 0; background: var(--nav-bg); display: flex; align-items: center; height: 80px; z-index: 100; border-top: 1px solid var(--border-color); padding: 0 10px; }
+.footer__questionWrapper___1tZ46 { display: flex; align-items: center; margin-right: 15px; }
+.footer__questionNo___3WNct { background: none; border: none; padding: 8px 12px; font-size: 15px; font-weight: 600; color: var(--text-color); cursor: pointer; display: flex; align-items: center; gap: 5px; border-radius: 4px; }
+.footer__questionNo___3WNct:hover { background-color: var(--part-header-bg); }
+.footer__subquestionWrapper___9GgoP { display: none; gap: 2px; margin-left: 8px; }
+.footer__questionWrapper___1tZ46.selected .footer__subquestionWrapper___9GgoP { display: flex; }
+.subQuestion { width: 30px; height: 30px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-color); font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; border-radius: 2px; }
+.subQuestion.answered { background-color: var(--part-header-bg); }
+.subQuestion.correct { background-color: var(--correct-color); color: white; }
+.subQuestion.incorrect { background-color: var(--incorrect-color); color: white; }
+.subQuestion.active { background-color: var(--input-focus); color: white; }
+.footer__deliverButton___3FM07 { margin-left: auto; margin-right: 10px; background-color: var(--part-header-bg); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 16px; font-size: 15px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; border-radius: 4px; }
+.hidden { display: none !important; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(17, 24, 39, 0.6); backdrop-filter: blur(3px); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+.modal-overlay.hidden { display: none; }
+.modal-content { background: var(--modal-bg); padding: 24px; border-radius: 14px; width: 92%; max-width: 780px; max-height: 86vh; display: flex; flex-direction: column; position: relative; border: 1px solid var(--border-color); color: var(--text-color); }
+.modal-close-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 28px; cursor: pointer; color: var(--text-color); }
+.results-summary { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; text-align: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
+.results-details-container { overflow-y: auto; padding-right: 10px; }
+.result-row { display: grid; grid-template-columns: 56px 1fr 1fr 120px; gap: 12px; padding: 10px 8px; border-bottom: 1px solid var(--border-color); font-size: 15px; align-items: center; }
+.result-row.correct { background-color: rgba(40, 167, 69, 0.1); } .result-row.incorrect { background-color: rgba(220, 53, 69, 0.1); }
+.result-row .q-num { font-weight: 700; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; width: 42px; height: 30px; display: inline-flex; align-items: center; justify-content: center; }
+.correct-answer-display { font-weight: bold; color: var(--correct-color); margin-left: 10px; font-size: 14px; }
+</style>
+</head>
+<body data-theme="light">
+
+<div class="header">
+    <div class="header-left">
+        <img src="https://d2snzxottmona5.cloudfront.net/releases/3.46.0/images/logo/ielts.svg" alt="IELTS Logo" class="ielts-logo">
+    </div>
+    <div class="header-right">
+        <div class="timer-container">
+            <span class="timer-display">60:00</span>
+            <div class="timer-controls">
+                <button id="timer-toggle-btn" title="Pause/Resume Timer">⏸</button>
+                <button id="timer-reset-btn" title="Reset Timer">🔄</button>
+            </div>
+            <button class="dark-mode-btn" id="dark-mode-toggle" title="Toggle Dark Mode">🌙</button>
+        </div>
+    </div>
+</div>
+
+<div class="main-container" id="main-container">
+    <div id="passage-header-container">
+        <div id="part-header-1" class="part-header"><p><strong>Part 1</strong></p><p>Read the text and answer questions 1-13.</p></div>
+        <div id="part-header-2" class="part-header hidden"><p><strong>Part 2</strong></p><p>Read the text and answer questions 14-26.</p></div>
+        <div id="part-header-3" class="part-header hidden"><p><strong>Part 3</strong></p><p>Read the text and answer questions 27-40.</p></div>
+    </div>
+    <div class="panels-container">
+        <div class="passage-panel" id="passage-panel">
+            <!-- PASSAGE 1 -->
+            <div id="passage-text-1" class="reading-passage">
+                <h4 class="text-center">Rubber</h4>
+                <p>T and W Musgrove discuss the origins and early uses of rubber</p>
+                <p>The plants that produce rubber are spread right across the globe and grow in many different habitats. One might think it likely, therefore, that humankind has known about rubber for thousands of years. Yet, unlike other crops of economic importance, rubber led a relatively anonymous life until the last 150 years or so. The Indians of South America appear to be the first people to have understood the properties of rubber, and the Aztecs of what is now Mexico were the first to be recorded using the substance; a wall painting dating back to the sixth century depicts a scene of a tributary offering of crude rubber.</p>
+                <p>With the arrival of Columbus in the Americas and the resulting Spanish influx, further evidence starts to appear concerning the Native American use of rubber. Antonio de Herrera y Tordesillas describes a ritual game played with a rubber ball at the court of the Aztec Emperor Montezuma II, and the Mayan and Toltec people are known to have taken part in similar activities. Rubber was also used to make raincoats, shoes, jars, torches and musical instruments, all of which must have been made from the indigenous Castilla elastica, as the Para plant now favoured for rubber cultivation does not grow in the Mexican region.</p>
+                <p>The first description of latex (liquid rubber) extraction is made by Juan de Torquemada, who noted that if a receptacle was not at hand the Native Americans would place the latex on their bodies to allow it to solidify. However, no real interest in rubber was shown by any European until Charles de la Condamine, a French mathematician, published an account of his journey to South America in 1735. The journey was undertaken on behalf of the Paris Academy of Sciences to measure an arc of the meridian line on the equator, but the journey home was to turn out to be more significant than the true purpose of the trip. Condamine explored Brazil and Peru and discovered how the local people used one single piece of coagulated latex to make boots. The boots were impervious to water and, when smoked, looked like real leather. In 1747 the first description of the rubber tree and latex tapping was made by a military engineer and amateur botanist, François Fresneau, who was posted to French Guiana. The publications of Condamine and Fresneau created considerable excitement among French scientists, and an attempt was made to discover a solvent that could turn the crude rubber into a substance for commercial exploitation.</p>
+                <p>In 1818 a British medical student named James Syme first used rubber to make waterproof cloth. Another early use of the substance was as an eraser of pencil marks, hence the name 'rubber. This was complemented by balloons, rubber bands, braces, boots for the army and other ideas that met with varying degrees of success. In 1820 Thomas Hancock, an English manufacturer of rubber goods such as driving belts, industrial rollers and rubber hoses, invented a machine he called the 'pickle', which chewed up waste strips for re-use. It was discovered that the masticated rubber was more malleable, while maintaining much of its elasticity. In Scotland at the same time, Charles Mackintosh had discovered a way of using rubber as waterproofing material, by a process he patented in 1823. Hancock and Mackintosh joined forces in 1834, and three years later Hancock invented a machine for spreading rubber onto material.</p>
+                <p>Despite their beneficial qualities, such as waterproofing, rubber goods were still not particularly popular as they had some major flaws, including the fact that they dissolved malodorously. They also became pliant when warm and rigid when cold. Then in 1839 the American Charles Goodyear discovered that it was possible to stabilise rubber by mixing it with sulphur while exposing it to heat - a process he called vulcanisation - and the full versatility of this extraordinary substance became apparent.</p>
+                <p>Rubber goods could now be manufactured which had all the beneficial qualities of the material, such as durability, elasticity and variability, but which were not sticky, soluble or governed by the vagaries of the weather. The economic potential of rubber was now clearly evident. It played an important role in the Industrial Revolution, being employed in the steam engines found in factories, mills, mines and railways. It made a triumphant entrance as a new and innovative material at the Great Exhibition of 1851, where shoes, airbeds, furniture and clothing made out of newly improved rubber were proudly displayed.</p>
+                <p>One of the most important rubber inventions was made in 1888 when an Irishman called John Boyd Dunlop produced the first pneumatic tyre. Solid rubber tyres had been used for the previous 18 years, but Dunlop's new design, which he updated in 1890, immediately became popular. In 1895 Dunlop's tyres were first used in motor cars, and with the mass production of cars just over the horizon the rubber industry had never looked healthier. The import levels of rubber over the nineteenth century bear witness to its irrepressible rise. In 1830 Britain had imported just 211 kg of crude rubber. This had risen to 10,000kg in 1857, and by 1874 levels were just under six times as much again.</p>
+            </div>
+            <!-- PASSAGE 2 -->
+            <div id="passage-text-2" class="reading-passage hidden">
+                <h4 class="text-center">Sleepy Students Perform Worse</h4>
+                <p><strong>A.</strong> Staying up an hour or two past bedtime makes it far harder for kids to learn, say scientists who deprived youngsters of sleep and tested whether their teachers could tell the difference. They could. If parents want their children to thrive academically, “Getting them to sleep on time is as important as getting them to school on time," said psychologist Gahan Fallone, who conducted the research at Brown Medical School.</p>
+                <p><strong>B.</strong> The study, unveiled Thursday at an American Medical Association (AMA) science writers meeting, was conducted on healthy children who had no evidence of sleep or learning disorders. Difficulty paying attention was among the problems the sleepy youngsters faced - raising the question of whether sleep deprivation could prove even worse for people with attention deficit hyperactivity disorder, or ADHD. Fallone now is studying that question, and suspects that sleep problems “could hit children with ADHD as a double whammy”.</p>
+                <p><strong>C.</strong> Sleep experts have long warned that Americans of all ages do not get enough shuteye. Sleep is important for health. Not getting enough is linked to a host of problems, from car crashes as drivers doze off to crippled memory and inhibited creativity. Exactly how much correlates with school performance is hard to prove. So, Brown researchers set out to test whether teachers could detect problems with attention and learning when children stayed up late.</p>
+                <p><strong>D.</strong> They recruited seventy-four 6- to 12-year-olds from Rhode Island and southern Massachusetts for the three-week study. For one week, the youngsters went to bed and woke up at their usual times. They already were fairly good sleepers, getting nine to 9.5 hours of sleep a night. Another week, they were assigned to spend no fewer than ten hours in bed a night. The other week, they were kept up later than usual. In addition to parents’ reports, the youngsters wore motion detecting wrist monitors to ensure compliance.</p>
+                <p><strong>E.</strong> Teachers were not told how much the children slept or which week they stayed up late, but rated the students on a variety of performance measures each week. The teachers reported significantly more academic problems during the week of sleep deprivation. Students who got eight hours of sleep or less a night were more forgetful, had the most trouble learning new lessons, and had the most problems paying attention, reported Fallone.</p>
+                <p><strong>F.</strong> Sleep has long been a concern of educators. Potter-Burns Elementary School sends notes to parents reminding them to make sure students get enough sleep prior to the school’s yearly achievement testing. Definitely, there is an impact on students’ performance if they come to school tired. However, the findings may change physician practice, said Dr. Regina Benjamin.</p>
+                <p><strong>G.</strong> Recommended amounts range from about ten to eleven hours a night for young elementary students to 8.5 hours for teens. Fallone insists that his own second-grader get ten hours a night, even when it meant dropping soccer practice if it ran too late. "Parents must believe in the importance of sleep."</p>
+            </div>
+            <!-- PASSAGE 3 -->
+            <div id="passage-text-3" class="reading-passage hidden">
+                <h4 class="text-center">How to make good decisions?</h4>
+                <p>Research explores when we can make a vital decision quickly and when we need to proceed more deliberately.</p>
+                <p><strong>A.</strong> A widely recognized legend tells us that in Gordium (in what is now Turkey) in the fourth century BC an oxcart was roped to a pole with a complex knot. It was said that the first person to untie it would become the king of Asia. Alexander simply took out his sword and cut it in two – then went on to conquer Asia. Ever since, the notion of a ‘Gordian solution’ has referred to the attractiveness of a simple answer to an otherwise intractable problem.</p>
+                <p><strong>B.</strong> Among researchers in the psychology of decision making, the ‘conflict model’ proposed by psychologists Irving Janis and Leon Mann in their 1977 book, Decision Making, argued that a complex decision-making process is essential for guarding individuals and groups from the peril of ‘group-think’. Decisions made without thorough examining relevant information and options would be suboptimal and often disastrous. However, examination by Peter Suedfield and Roderick Kramer found little difference in the two decision-making processes.</p>
+                <p><strong>C.</strong> In general, organizational and political science offers little evidence that complex decisions fare better than simpler ones. In fact, a growing body of work suggests that in many situations simply ‘snap’ decisions can be routinely superior to more complex ones – an idea that gained widespread public appeal with Malcolm Gladwell’s best-selling book Blink (2005).</p>
+                <p><strong>D.</strong> An article by Ap Dijksterhuis of the University of Amsterdam, ‘On Making the Right Choice: The deliberation-without-attention Effect’, runs very much in the spirit of Gladwell’s text. Its core argument is that conscious decision-making requires cognitive resources. Because increasingly complex decisions place increasing strain on those resources, the quality of our decisions declines as complexity increases. Unconscious decision-making (‘deliberation without attention’) requires no cognitive resources, so task complexity does not reduce effectiveness.</p>
+                <p><strong>E.</strong> Dijksterhuis reports four simple but elegant studies supporting this argument. In one, participants assessed the quality of four hypothetical cars considering 4 attributes or 12 attributes. Conscious deliberation helped for 4 attributes, but led to inferior discrimination and poor decisions for 12 attributes.</p>
+                <p><strong>F.</strong> In other studies, Dijksterhuis surveyed people shopping for clothes (‘simple’ products) and furniture (‘complex’ products). Shoppers who bought complex furniture with little conscious deliberation felt happier with their purchases.</p>
+                <p><strong>G.</strong> From there, the researchers take a big leap: it should benefit the individual to think consciously about simple matters and to delegate thinking about more complicated matters to the unconscious.</p>
+                <p><strong>H.</strong> Still, in the realms of governance and society, variables that can be neatly circumscribed in shopping lose clarity in a world of group dynamics, social interaction, and politics. Gladwell’s book and Dijksterhuis’s paper are invaluable in pointing out limitations of conventional wisdom, but decision-making is also a question of politics, ideology, and group membership.</p>
+            </div>
+        </div>
+        <div class="resizer" id="resizer"></div>
+        <div class="questions-panel" id="questions-panel">
+            <!-- PART 1 QUESTIONS -->
+            <div id="questions-1" class="question-set">
+                <div class="question" data-q-start="1" data-q-end="6">
+                    <p><strong>Questions 1-6: TRUE / FALSE / NOT GIVEN</strong></p>
+                    <div class="tf-question" data-q-start="1"><span class="tf-question-number">1</span> Rubber plants grow only in certain regions of the world. <br><label class="tf-option"><input type="radio" name="q1" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q1" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q1" value="NOT GIVEN"> NOT GIVEN</label></div>
+                    <div class="tf-question" data-q-start="2"><span class="tf-question-number">2</span> Rubber was extracted in Mexico as early as the sixth century. <br><label class="tf-option"><input type="radio" name="q2" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q2" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q2" value="NOT GIVEN"> NOT GIVEN</label></div>
+                    <div class="tf-question" data-q-start="3"><span class="tf-question-number">3</span> Rubber from Castilla Elastica plant is poorer quality than Para. <br><label class="tf-option"><input type="radio" name="q3" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q3" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q3" value="NOT GIVEN"> NOT GIVEN</label></div>
+                    <div class="tf-question" data-q-start="4"><span class="tf-question-number">4</span> A French mathematician inspired real interest in rubber amongst Europeans. <br><label class="tf-option"><input type="radio" name="q4" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q4" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q4" value="NOT GIVEN"> NOT GIVEN</label></div>
+                    <div class="tf-question" data-q-start="5"><span class="tf-question-number">5</span> The process of vulcanisation was discovered by accident. <br><label class="tf-option"><input type="radio" name="q5" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q5" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q5" value="NOT GIVEN"> NOT GIVEN</label></div>
+                    <div class="tf-question" data-q-start="6"><span class="tf-question-number">6</span> Imports of crude rubber into Britain fell during the nineteenth century. <br><label class="tf-option"><input type="radio" name="q6" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q6" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q6" value="NOT GIVEN"> NOT GIVEN</label></div>
+                </div>
+                <div class="question" data-q-start="7" data-q-end="13">
+                    <p><strong>Questions 7-13: Summary Completion (NO MORE THAN THREE WORDS)</strong></p>
+                    <p>In 1818, <input type="text" class="answer-input" id="q7" placeholder="7"> was produced using rubber, and in 1820 a machine was invented for recycling <input type="text" class="answer-input" id="q8" placeholder="8"> of rubber.</p>
+                    <p>Rubber products became soft or <input type="text" class="answer-input" id="q9" placeholder="9"> depending on temperature. In 1839 a new process to <input type="text" class="answer-input" id="q10" placeholder="10"> the substance increased its potential. It was used in <input type="text" class="answer-input" id="q11" placeholder="11"> during the Industrial Revolution. In 1888 the <input type="text" class="answer-input" id="q12" placeholder="12"> tyre was developed, and later the <input type="text" class="answer-input" id="q13" placeholder="13"> of motor cars began.</p>
+                </div>
+            </div>
+            <!-- PART 2 QUESTIONS -->
+            <div id="questions-2" class="question-set hidden">
+                <div class="question" data-q-start="14" data-q-end="17">
+                    <p><strong>Questions 14-17: Paragraph Matching (A-G)</strong></p>
+                    <p>14. Traffic accidents caused by lack of sleep: <input type="text" class="answer-input" id="q14" style="width:60px;"></p>
+                    <p>15. Number of children included in study: <input type="text" class="answer-input" id="q15" style="width:60px;"></p>
+                    <p>16. How two schools deal with the problem: <input type="text" class="answer-input" id="q16" style="width:60px;"></p>
+                    <p>17. How sleep deprivation was measured: <input type="text" class="answer-input" id="q17" style="width:60px;"></p>
+                </div>
+                <div class="question" data-q-start="18" data-q-end="21">
+                    <p><strong>Questions 18-21: Sentence Completion (NO MORE THAN TWO WORDS)</strong></p>
+                    <p>18. Fallone studies children with <input type="text" class="answer-input" id="q18">.</p>
+                    <p>19. Researchers used <input type="text" class="answer-input" id="q19"> to monitor compliance.</p>
+                    <p>20. Students had trouble learning new lessons and <input type="text" class="answer-input" id="q20">.</p>
+                    <p>21. Fallone admitted it was <input type="text" class="answer-input" id="q21"> for kids to get enough sleep.</p>
+                </div>
+                <div class="question" data-q-start="22" data-q-end="26">
+                    <p><strong>Questions 22-26: TRUE / FALSE / NOT GIVEN</strong></p>
+                    <div class="tf-question" data-q-start="22"><span class="tf-question-number">22</span> Results were first sent to school principals. <br><label class="tf-option"><input type="radio" name="q22" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q22" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q22" value="NOT GIVEN"> NOT GIVEN</label></div>
+                    <div class="tf-question" data-q-start="23"><span class="tf-question-number">23</span> Children previously showed sleep problems. <br><label class="tf-option"><input type="radio" name="q23" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q23" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q23" value="NOT GIVEN"> NOT GIVEN</label></div>
+                    <div class="tf-question" data-q-start="24"><span class="tf-question-number">24</span> Study could influence physician practice. <br><label class="tf-option"><input type="radio" name="q24" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q24" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q24" value="NOT GIVEN"> NOT GIVEN</label></div>
+                    <div class="tf-question" data-q-start="25"><span class="tf-question-number">25</span> Fallone does not let his daughter play soccer. <br><label class="tf-option"><input type="radio" name="q25" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q25" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q25" value="NOT GIVEN"> NOT GIVEN</label></div>
+                    <div class="tf-question" data-q-start="26"><span class="tf-question-number">26</span> Staying up late is acceptable for homework. <br><label class="tf-option"><input type="radio" name="q26" value="TRUE"> TRUE</label> <label class="tf-option"><input type="radio" name="q26" value="FALSE"> FALSE</label> <label class="tf-option"><input type="radio" name="q26" value="NOT GIVEN"> NOT GIVEN</label></div>
+                </div>
+            </div>
+            <!-- PART 3 QUESTIONS -->
+            <div id="questions-3" class="question-set hidden">
+                <div class="question" data-q-start="27" data-q-end="31">
+                    <p><strong>Questions 27-31: Multiple Choice</strong></p>
+                    <div class="multi-choice-question" data-q-start="27"><p>27. Gordian knot legend illustrates:</p><label class="multi-choice-option"><input type="radio" name="q27" value="A"> A. anyone can solve problems</label><label class="multi-choice-option"><input type="radio" name="q27" value="B"> B. difficult problems can have easy solutions</label></div>
+                    <div class="multi-choice-question" data-q-start="28"><p>28. Conflict model requires:</p><label class="multi-choice-option"><input type="radio" name="q28" value="A"> A. political parties</label><label class="multi-choice-option"><input type="radio" name="q28" value="B"> B. all important facts considered</label></div>
+                    <div class="multi-choice-question" data-q-start="29"><p>29. Gladwell's Blink idea:</p><label class="multi-choice-option"><input type="radio" name="q29" value="C"> C. best decisions are made quickly</label></div>
+                    <div class="multi-choice-question" data-q-start="30"><p>30. Dijksterhuis claims:</p><label class="multi-choice-option"><input type="radio" name="q30" value="B"> B. conscious decision making is affected by task complexity</label></div>
+                    <div class="multi-choice-question" data-q-start="31"><p>31. Car study found simple tasks benefited when allowed to:</p><label class="multi-choice-option"><input type="radio" name="q31" value="D"> D. concentrate</label></div>
+                </div>
+                <div class="question" data-q-start="32" data-q-end="35">
+                    <p><strong>Questions 32-35: Summary Completion (A-I)</strong></p>
+                    <p>32. <input type="text" class="answer-input" id="q32"> 33. <input type="text" class="answer-input" id="q33"> 34. <input type="text" class="answer-input" id="q34"> 35. <input type="text" class="answer-input" id="q35"></p>
+                </div>
+                <div class="question" data-q-start="36" data-q-end="40">
+                    <p><strong>Questions 36-40: YES / NO / NOT GIVEN</strong></p>
+                    <div class="tf-question" data-q-start="36"><span class="tf-question-number">36</span> Findings agree with political theory: <label class="tf-option"><input type="radio" name="q36" value="YES"> YES</label> <label class="tf-option"><input type="radio" name="q36" value="NO"> NO</label></div>
+                    <div class="tf-question" data-q-start="37"><span class="tf-question-number">37</span> Political leaders use deliberation without attention: <label class="tf-option"><input type="radio" name="q37" value="YES"> YES</label> <label class="tf-option"><input type="radio" name="q37" value="NO"> NO</label></div>
+                    <div class="tf-question" data-q-start="38"><span class="tf-question-number">38</span> All political decisions are complex: <label class="tf-option"><input type="radio" name="q38" value="NOT GIVEN"> NOT GIVEN</label></div>
+                    <div class="tf-question" data-q-start="39"><span class="tf-question-number">39</span> Judge errors by political beliefs: <label class="tf-option"><input type="radio" name="q39" value="YES"> YES</label></div>
+                    <div class="tf-question" data-q-start="40"><span class="tf-question-number">40</span> Social considerations necessary: <label class="tf-option"><input type="radio" name="q40" value="YES"> YES</label></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Navigation Bar with Question Buttons 1-40 -->
+<nav class="nav-row" aria-label="Questions">
+    <div class="footer__questionWrapper___1tZ46 selected" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(1)">
+            <span><span class="section-prefix">Part </span><span class="sectionNr">1</span> <span class="attemptedCount" id="att1">0 of 13</span></span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(1)">1</button>
+            <button class="subQuestion" onclick="goToQuestion(2)">2</button>
+            <button class="subQuestion" onclick="goToQuestion(3)">3</button>
+            <button class="subQuestion" onclick="goToQuestion(4)">4</button>
+            <button class="subQuestion" onclick="goToQuestion(5)">5</button>
+            <button class="subQuestion" onclick="goToQuestion(6)">6</button>
+            <button class="subQuestion" onclick="goToQuestion(7)">7</button>
+            <button class="subQuestion" onclick="goToQuestion(8)">8</button>
+            <button class="subQuestion" onclick="goToQuestion(9)">9</button>
+            <button class="subQuestion" onclick="goToQuestion(10)">10</button>
+            <button class="subQuestion" onclick="goToQuestion(11)">11</button>
+            <button class="subQuestion" onclick="goToQuestion(12)">12</button>
+            <button class="subQuestion" onclick="goToQuestion(13)">13</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(2)">
+            <span><span class="section-prefix">Part </span><span class="sectionNr">2</span> <span class="attemptedCount" id="att2">0 of 13</span></span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(14)">14</button>
+            <button class="subQuestion" onclick="goToQuestion(15)">15</button>
+            <button class="subQuestion" onclick="goToQuestion(16)">16</button>
+            <button class="subQuestion" onclick="goToQuestion(17)">17</button>
+            <button class="subQuestion" onclick="goToQuestion(18)">18</button>
+            <button class="subQuestion" onclick="goToQuestion(19)">19</button>
+            <button class="subQuestion" onclick="goToQuestion(20)">20</button>
+            <button class="subQuestion" onclick="goToQuestion(21)">21</button>
+            <button class="subQuestion" onclick="goToQuestion(22)">22</button>
+            <button class="subQuestion" onclick="goToQuestion(23)">23</button>
+            <button class="subQuestion" onclick="goToQuestion(24)">24</button>
+            <button class="subQuestion" onclick="goToQuestion(25)">25</button>
+            <button class="subQuestion" onclick="goToQuestion(26)">26</button>
+        </div>
+    </div>
+    <div class="footer__questionWrapper___1tZ46" role="tablist">
+        <button role="tab" class="footer__questionNo___3WNct" onclick="switchToPart(3)">
+            <span><span class="section-prefix">Part </span><span class="sectionNr">3</span> <span class="attemptedCount" id="att3">0 of 14</span></span>
+        </button>
+        <div class="footer__subquestionWrapper___9GgoP">
+            <button class="subQuestion" onclick="goToQuestion(27)">27</button>
+            <button class="subQuestion" onclick="goToQuestion(28)">28</button>
+            <button class="subQuestion" onclick="goToQuestion(29)">29</button>
+            <button class="subQuestion" onclick="goToQuestion(30)">30</button>
+            <button class="subQuestion" onclick="goToQuestion(31)">31</button>
+            <button class="subQuestion" onclick="goToQuestion(32)">32</button>
+            <button class="subQuestion" onclick="goToQuestion(33)">33</button>
+            <button class="subQuestion" onclick="goToQuestion(34)">34</button>
+            <button class="subQuestion" onclick="goToQuestion(35)">35</button>
+            <button class="subQuestion" onclick="goToQuestion(36)">36</button>
+            <button class="subQuestion" onclick="goToQuestion(37)">37</button>
+            <button class="subQuestion" onclick="goToQuestion(38)">38</button>
+            <button class="subQuestion" onclick="goToQuestion(39)">39</button>
+            <button class="subQuestion" onclick="goToQuestion(40)">40</button>
+        </div>
+    </div>
+    <button id="deliver-button" class="footer__deliverButton___3FM07">Check Answers</button>
+</nav>
+
+<div id="results-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <button class="modal-close-btn" onclick="closeResultsModal()">&times;</button>
+        <h2>Results</h2>
+        <div class="results-summary">
+            <p>Score: <span id="results-score">0</span> / 40</p>
+            <p>IELTS Band: <span id="results-band">0.0</span></p>
+        </div>
+        <div id="results-details" class="results-details-container"></div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let currentPassage = 1;
+    let currentQuestion = 1;
+    
+    const correctAnswers = {
+        '1':'FALSE','2':'TRUE','3':'NOT GIVEN','4':'TRUE','5':'NOT GIVEN','6':'FALSE',
+        '7':'WATERPROOF CLOTH','8':'WASTE STRIPS','9':'RIGID','10':'STABILISE','11':'STEAM ENGINES','12':'FIRST PNEUMATIC','13':'MASS PRODUCTION',
+        '14':'C','15':'D','16':'F','17':'E','18':'ADHD','19':'WRIST MONITORS','20':'PAYING ATTENTION','21':'TOUGH','22':'FALSE','23':'FALSE','24':'TRUE','25':'NOT GIVEN','26':'NOT GIVEN',
+        '27':'B','28':'B','29':'C','30':'B','31':'D','32':'A','33':'D','34':'G','35':'B','36':'NO','37':'YES','38':'NOT GIVEN','39':'YES','40':'NO'
+    };
+
+    document.getElementById('deliver-button').addEventListener('click', checkAnswers);
+
+    function checkAnswers() {
+        let score = 0;
+        const details = document.getElementById('results-details');
+        details.innerHTML = '';
+
+        for (let i = 1; i <= 40; i++) {
+            const key = String(i);
+            const correct = correctAnswers[key];
+            const textInput = document.getElementById(`q${i}`);
+            const radioGroup = document.querySelectorAll(`input[name="q${i}"]:checked`);
+            let userAns = '';
+            if (textInput) userAns = textInput.value.trim().toUpperCase();
+            else if (radioGroup.length > 0) userAns = radioGroup[0].value;
+            
+            const isOk = userAns === correct.toUpperCase();
+            if (isOk) score++;
+
+            details.innerHTML += `
+                <div class="result-row ${isOk ? 'correct' : 'incorrect'}">
+                    <span class="q-num">${i}</span>
+                    <span>${userAns || 'Not Answered'}</span>
+                    <span>${correct}</span>
+                    <span class="status-badge ${isOk ? 'ok' : 'bad'}">${isOk ? 'Correct' : 'Incorrect'}</span>
+                </div>`;
+            
+            const btn = document.querySelector(`.subQuestion[onclick="goToQuestion(${i})"]`);
+            if (btn) btn.classList.add(isOk ? 'correct' : 'incorrect');
+        }
+        
+        document.getElementById('results-score').textContent = score;
+        document.getElementById('results-band').textContent = (score >= 39 ? 9.0 : score >= 35 ? 8.0 : score >= 30 ? 7.0 : score >= 23 ? 6.0 : 5.0).toFixed(1);
+        document.getElementById('results-modal').classList.remove('hidden');
+    }
+
+    window.switchToPart = function(partNum) {
+        currentPassage = partNum;
+        document.querySelectorAll('.reading-passage, .question-set, .part-header').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`passage-text-${partNum}`).classList.remove('hidden');
+        document.getElementById(`questions-${partNum}`).classList.remove('hidden');
+        document.getElementById(`part-header-${partNum}`).classList.remove('hidden');
+
+        document.querySelectorAll('.footer__questionWrapper___1tZ46').forEach((w, idx) => {
+            w.classList.toggle('selected', (idx + 1) === partNum);
+        });
+
+        const firstQ = {1:1, 2:14, 3:27}[partNum];
+        goToQuestion(firstQ);
+    };
+
+    window.goToQuestion = function(qNum) {
+        currentQuestion = qNum;
+        let part = qNum >= 27 ? 3 : qNum >= 14 ? 2 : 1;
+        if (currentPassage !== part) {
+            switchToPart(part);
+            return;
+        }
+
+        document.querySelectorAll('.subQuestion').forEach(btn => btn.classList.remove('active'));
+        const activeNav = document.querySelector(`.subQuestion[onclick="goToQuestion(${qNum})"]`);
+        if (activeNav) activeNav.classList.add('active');
+
+        const el = document.getElementById(`q${qNum}`) || document.querySelector(`[data-q-start="${qNum}"]`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    window.closeResultsModal = function() {
+        document.getElementById('results-modal').classList.add('hidden');
+    };
+
+    switchToPart(1);
+});
+</script>
+</body>
+</html>

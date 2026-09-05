@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIVID IELTS — Complete IELTS Learning Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">V</span>
+      <span class="logo-text">VIVID <em>IELTS</em></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#community">Community</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="auth.html" class="btn btn-ghost">Log in</a>
+      <a href="auth.html" class="btn btn-primary">Start free</a>
+    </div>
+    <button class="nav-burger" id="navBurger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow">3,500+ words · 40+ grammar topics · AI Mentor</p>
+      <h1>Turn your English from <span class="grad-text">dull</span> to <span class="grad-text vivid">vivid</span>.</h1>
+      <p class="hero-sub">Vocabulary, Grammar, Listening, Reading, Writing and Speaking — all in one ecosystem. AI tracks every mistake you make and helps you raise your band score.</p>
+      <div class="hero-cta">
+        <a href="auth.html" class="btn btn-primary btn-lg">Start free</a>
+        <a href="#how" class="btn btn-outline btn-lg">See how it works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num" id="learnerCount">500+</span><span class="stat-label">active learners</span></div>
+        <div class="stat"><span class="stat-num">+1.2</span><span class="stat-label">average band gain</span></div>
+        <div class="stat"><span class="stat-num">4.8/5</span><span class="stat-label">user rating</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="score-card">
+        <p class="score-card-label">Your journey</p>
+        <div class="spectrum-wrap">
+          <div class="spectrum-track">
+            <div class="spectrum-fill" id="spectrumFill"></div>
+            <div class="spectrum-dot" id="spectrumDot" style="left:22%">
+              <span class="spectrum-dot-value">5.5</span>
+            </div>
+            <div class="spectrum-dot target" style="left:78%">
+              <span class="spectrum-dot-value">7.0</span>
+            </div>
+          </div>
+          <div class="spectrum-scale">
+            <span>5.0</span><span>6.0</span><span>7.0</span><span>8.0</span><span>9.0</span>
+          </div>
+        </div>
+        <div class="skill-rings">
+          <div class="ring" data-skill="Listening" data-value="72"><svg viewBox="0 0 60 60"><circle class="ring-bg" cx="30" cy="30" r="26"></circle><circle class="ring-fg ring-cyan" cx="30" cy="30" r="26"></circle></svg><span class="ring-label">Listening</span></div>
+          <div class="ring" data-skill="Reading" data-value="58"><svg viewBox="0 0 60 60"><circle class="ring-bg" cx="30" cy="30" r="26"></circle><circle class="ring-fg ring-violet" cx="30" cy="30" r="26"></circle></svg><span class="ring-label">Reading</span></div>
+          <div class="ring" data-skill="Writing" data-value="45"><svg viewBox="0 0 60 60"><circle class="ring-bg" cx="30" cy="30" r="26"></circle><circle class="ring-fg ring-coral" cx="30" cy="30" r="26"></circle></svg><span class="ring-label">Writing</span></div>
+          <div class="ring" data-skill="Speaking" data-value="63"><svg viewBox="0 0 60 60"><circle class="ring-bg" cx="30" cy="30" r="26"></circle><circle class="ring-fg ring-cyan" cx="30" cy="30" r="26"></circle></svg><span class="ring-label">Speaking</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGO STRIP -->
+<section class="marquee-wrap" aria-hidden="true">
+  <div class="marquee">
+    <div class="marquee-track">
+      <span>MATCHING HEADINGS</span><span>·</span><span>TASK 2 ESSAY</span><span>·</span><span>DICTATION</span><span>·</span><span>CUE CARD</span><span>·</span><span>COLLOCATIONS</span><span>·</span><span>SKIMMING</span><span>·</span><span>PASSIVE VOICE</span><span>·</span><span>BAND DESCRIPTOR</span><span>·</span>
+      <span>MATCHING HEADINGS</span><span>·</span><span>TASK 2 ESSAY</span><span>·</span><span>DICTATION</span><span>·</span><span>CUE CARD</span><span>·</span><span>COLLOCATIONS</span><span>·</span><span>SKIMMING</span><span>·</span><span>PASSIVE VOICE</span><span>·</span><span>BAND DESCRIPTOR</span><span>·</span>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-head">
+    <p class="eyebrow">Features</p>
+    <h2>One platform, six skills.</h2>
+    <p class="section-sub">Each section works on its own, but all of them are guided by a single AI Mentor.</p>
+  </div>
+  <div class="feature-grid">
+    <article class="feature-card fc-1">
+      <span class="feature-icon">📚</span>
+      <h3>Vocabulary Lab</h3>
+      <p>Band 5 to 8+ words, collocations and context-based learning. New words are waiting for you every day.</p>
+    </article>
+    <article class="feature-card fc-2">
+      <span class="feature-icon">📐</span>
+      <h3>Grammar Hub</h3>
+      <p>A library of Band 6, 7 and 8 sentence structures, plus an AI Grammar Checker that fixes your mistakes in real time.</p>
+    </article>
+    <article class="feature-card fc-3">
+      <span class="feature-icon">🎧</span>
+      <h3>Listening</h3>
+      <p>Accent training, dictation and note-taking — practice covering every question type.</p>
+    </article>
+    <article class="feature-card fc-4">
+      <span class="feature-icon">📖</span>
+      <h3>Reading</h3>
+      <p>Skimming, scanning, matching headings — strategies and time-management practice.</p>
+    </article>
+    <article class="feature-card fc-5">
+      <span class="feature-icon">✍️</span>
+      <h3>Writing</h3>
+      <p>AI evaluates Task 1 and Task 2 essays with detailed feedback on TR, CC, LR and GRA.</p>
+    </article>
+    <article class="feature-card fc-6">
+      <span class="feature-icon">🗣</span>
+      <h3>Speaking</h3>
+      <p>Record your voice + AI Examiner — analyzes your pronunciation, fluency and grammar.</p>
+    </article>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-head">
+    <p class="eyebrow">Process</p>
+    <h2>A personal IELTS plan in 3 steps.</h2>
+  </div>
+  <div class="how-steps">
+    <div class="how-step">
+      <span class="how-num">01</span>
+      <h3>Placement Test</h3>
+      <p>We assess your current level and vocabulary size — in just 15 minutes.</p>
+    </div>
+    <div class="how-step">
+      <span class="how-num">02</span>
+      <h3>Personal Roadmap</h3>
+      <p>AI builds a 90-day plan tailored to your weak areas.</p>
+    </div>
+    <div class="how-step">
+      <span class="how-num">03</span>
+      <h3>Daily practice + AI feedback</h3>
+      <p>Words, grammar and exercises every day — progress is tracked automatically.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="section-head">
+    <p class="eyebrow">Pricing</p>
+    <h2>Choose the plan that fits you.</h2>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <h3>Free</h3>
+      <p class="price">$0</p>
+      <ul>
+        <li>Limited lesson access</li>
+        <li>2 Reading mock tests</li>
+        <li>2 Full Listening mock tests</li>
+      </ul>
+      <a href="#" class="btn btn-outline">Get started</a>
+    </div>
+    <div class="price-card featured">
+      <span class="price-badge">First 100 users</span>
+      <h3>Premium</h3>
+      <p class="price"><span class="price-old">129,000</span> 79,000 UZS<span>/mo</span></p>
+      <ul>
+        <li>30 full Reading &amp; Listening mock tests</li>
+        <li>Certificate on completion</li>
+        <li>Keyword tables &amp; wordlists</li>
+        <li>Writing mock test + AI review</li>
+        <li>Full article library access</li>
+      </ul>
+      <button class="btn btn-primary" data-plan="premium">Get Premium</button>
+    </div>
+    <div class="price-card">
+      <span class="price-badge price-badge-outline">First 100 users</span>
+      <h3>Pro</h3>
+      <p class="price"><span class="price-old">299,000</span> 249,000 UZS<span>/mo</span></p>
+      <ul>
+        <li>Everything in Premium</li>
+        <li>Article library + topic wordlists</li>
+        <li>Full Speaking mock test</li>
+        <li>3 full IELTS mock exams</li>
+      </ul>
+      <button class="btn btn-outline" data-plan="pro">Get Pro</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-band">
+  <h2>Start today — feel your band score grow.</h2>
+  <a href="auth.html" class="btn btn-primary btn-lg">Sign up for free</a>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer" id="community">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo-mark">V</span>
+      <span class="logo-text">VIVID <em>IELTS</em></span>
+      <p>The complete IELTS learning ecosystem.</p>
+    </div>
+    <div class="footer-cols">
+      <div>
+        <h4>Platform</h4>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#how">How it works</a>
+      </div>
+      <div>
+        <h4>Community</h4>
+        <a href="#">Study Groups</a>
+        <a href="#">Leaderboard</a>
+        <a href="#">Teachers</a>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <a href="#">Send feedback</a>
+        <a href="#">Contact us</a>
+      </div>
+    </div>
+  </div>
+  <p class="footer-bottom">© 2026 VIVID IELTS. All rights reserved.</p>
+</footer>
+
+<!-- PAYMENT MODAL -->
+<div class="pay-modal" id="payModal" hidden>
+  <div class="pay-modal-card">
+    <button class="pay-modal-close" id="payModalClose" aria-label="Close">&times;</button>
+    <p class="eyebrow">Checkout</p>
+    <h3 id="payModalPlan">Get Premium</h3>
+    <p class="pay-modal-sub">Choose a payment method to continue.</p>
+    <div class="pay-methods">
+      <button class="pay-method" data-method="payme">
+        <span class="pay-method-name">Payme</span>
+        <span class="pay-method-hint">Redirect to Payme checkout</span>
+      </button>
+      <button class="pay-method" data-method="click">
+        <span class="pay-method-name">Click</span>
+        <span class="pay-method-hint">Redirect to Click checkout</span>
+      </button>
+    </div>
+    <p class="pay-modal-status" id="payModalStatus"></p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
