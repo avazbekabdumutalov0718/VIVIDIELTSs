@@ -87,45 +87,6 @@ document.querySelectorAll('[data-oauth="google"]').forEach((btn) => {
   });
 });
 
-// ===== Telegram sign-in (bot sends a 6-digit code, user types it here) =====
-// Full setup is documented in /supabase/functions/telegram-code-login/README.md.
-document.querySelectorAll('[data-oauth="telegram"]').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    const panelId = btn.getAttribute('data-panel');
-    const panel = document.getElementById(panelId);
-    if (!panel) return;
-    panel.hidden = !panel.hidden;
-    if (!panel.hidden) {
-      const input = panel.querySelector('.telegram-code-input');
-      if (input) input.focus();
-    }
-  });
-});
-
-document.querySelectorAll('.telegram-code-submit').forEach((submitBtn) => {
-  submitBtn.addEventListener('click', async () => {
-    const panel = submitBtn.closest('.telegram-code-panel');
-    const input = panel.querySelector('.telegram-code-input');
-    const code = (input.value || '').trim();
-
-    if (!/^\d{6}$/.test(code)) {
-      setStatus('Please enter the 6-digit code the bot sent you.', true);
-      return;
-    }
-    if (typeof VividDB === 'undefined' || !VividDB.isConfigured) {
-      setStatus('Supabase is not connected yet — see supabase-config.js.', true);
-      return;
-    }
-
-    submitBtn.disabled = true;
-    setStatus('Verifying your code...', false);
-    const { error } = await VividDB.signInWithTelegramCode(code);
-    submitBtn.disabled = false;
-    if (error) setStatus(error.message, true);
-    // On success the browser is redirected straight to dashboard.html.
-  });
-});
-
 if (signupForm) {
   signupForm.addEventListener('submit', async (e) => {
     e.preventDefault();

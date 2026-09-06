@@ -86,6 +86,34 @@ const VividDB = (() => {
     return { data, error };
   }
 
+  // Log in with a username (set once via the "complete your profile" step)
+  // instead of an email. Looks the username up via a public Edge Function
+  // that maps it to the account's internal (synthetic) email, then signs in
+  // normally. Requires the `resolve-username` Edge Function to be deployed.
+  async function signInWithUsername(username, password) {
+    if (!client) return { error: { message: 'Supabase is not configured yet (see supabase-config.js).' } };
+    const clean = String(username || '').trim().toLowerCase().replace(/^@+/, '');
+    const { data, error } = await client.functions.invoke('resolve-username', { body: { username: clean } });
+    if (error || !data?.email) {
+      let message = "Bunday username topilmadi.";
+      try {
+        const body = await error.context.json();
+        if (body?.error) message = body.error;
+      } catch (e) {}
+      return { error: { message } };
+    }
+    return await signIn(data.email, password);
+  }
+
+  // Sets/changes the password for the CURRENTLY signed-in user (used right
+  // after Telegram login, so the user can log in with username+password
+  // next time instead of asking the bot for a new code every time).
+  async function setPassword(password) {
+    if (!client) return { error: { message: 'Supabase is not configured yet (see supabase-config.js).' } };
+    const { data, error } = await client.auth.updateUser({ password });
+    return { data, error };
+  }
+
   async function signInWithGoogle() {
     if (!client) return { error: { message: 'Supabase is not configured yet (see supabase-config.js).' } };
     const { data, error } = await client.auth.signInWithOAuth({
@@ -279,7 +307,7 @@ const VividDB = (() => {
   }
 
   return {
-    isConfigured, signUp, signIn, signInWithGoogle, signInWithTelegramCode, signOut, getSession, getUser,
+    isConfigured, signUp, signIn, signInWithGoogle, signInWithTelegramCode, signInWithUsername, setPassword, signOut, getSession, getUser,
     getProfile, updateProfile,
     getLearnedWordIds, markWordLearned, unmarkWordLearned,
     getCollocationProgress, markCollocationUnitCompleted,

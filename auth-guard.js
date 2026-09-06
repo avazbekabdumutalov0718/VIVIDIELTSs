@@ -220,9 +220,9 @@ function showCompleteProfileModal(profile) {
     font-family:'Inter',Arial,sans-serif;`;
 
   overlay.innerHTML = `
-    <div style="background:#fff; border-radius:16px; padding:28px; width:100%; max-width:380px; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+    <div style="background:#fff; border-radius:16px; padding:28px; width:100%; max-width:380px; box-shadow:0 20px 60px rgba(0,0,0,0.3); max-height:92vh; overflow-y:auto;">
       <h2 style="margin:0 0 6px; font-size:20px; font-weight:700; color:#111;">Profilingizni to'ldiring</h2>
-      <p style="margin:0 0 20px; font-size:14px; color:#666;">Davom etishdan oldin ism va username kiriting.</p>
+      <p style="margin:0 0 20px; font-size:14px; color:#666;">Ism, username va parol o'rnating — keyingi safar botsiz, shu username va parol bilan kirasiz.</p>
 
       <label style="display:block; font-size:13px; font-weight:600; color:#333; margin-bottom:6px;">To'liq ism</label>
       <input id="vpFullName" type="text" value="${(profile.full_name || '').replace(/"/g, '&quot;')}"
@@ -230,7 +230,16 @@ function showCompleteProfileModal(profile) {
 
       <label style="display:block; font-size:13px; font-weight:600; color:#333; margin-bottom:6px;">Username</label>
       <input id="vpUsername" type="text" placeholder="masalan: azizbek_23"
+        style="width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; margin-bottom:14px;" />
+
+      <label style="display:block; font-size:13px; font-weight:600; color:#333; margin-bottom:6px;">Parol (kamida 8 belgi)</label>
+      <input id="vpPassword" type="password" placeholder="••••••••"
+        style="width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px; margin-bottom:14px;" />
+
+      <label style="display:block; font-size:13px; font-weight:600; color:#333; margin-bottom:6px;">Parolni tasdiqlang</label>
+      <input id="vpPassword2" type="password" placeholder="••••••••"
         style="width:100%; box-sizing:border-box; padding:10px 12px; border:1px solid #ddd; border-radius:8px; font-size:14px;" />
+
       <div id="vpError" style="color:#e11d48; font-size:13px; margin-top:8px; min-height:16px;"></div>
 
       <button id="vpSubmit" style="width:100%; margin-top:16px; padding:12px; background:#111; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer;">
@@ -243,15 +252,27 @@ function showCompleteProfileModal(profile) {
   const submitBtn = overlay.querySelector('#vpSubmit');
   const nameInput = overlay.querySelector('#vpFullName');
   const userInput = overlay.querySelector('#vpUsername');
+  const passInput = overlay.querySelector('#vpPassword');
+  const pass2Input = overlay.querySelector('#vpPassword2');
   const errorEl = overlay.querySelector('#vpError');
 
   submitBtn.addEventListener('click', async () => {
     const fullName = nameInput.value.trim();
-    let username = userInput.value.trim().toLowerCase();
+    let username = userInput.value.trim().toLowerCase().replace(/^@+/, '');
+    const password = passInput.value;
+    const password2 = pass2Input.value;
 
     if (!fullName) { errorEl.textContent = 'Ismingizni kiriting.'; return; }
     if (!/^[a-z0-9_]{3,20}$/.test(username)) {
       errorEl.textContent = 'Username 3-20 belgidan iborat, faqat lotin harflari, raqam va pastki chiziq (_) bo\'lishi mumkin.';
+      return;
+    }
+    if (password.length < 8) {
+      errorEl.textContent = 'Parol kamida 8 belgidan iborat bo\'lishi kerak.';
+      return;
+    }
+    if (password !== password2) {
+      errorEl.textContent = 'Parollar bir xil emas.';
       return;
     }
 
@@ -269,6 +290,14 @@ function showCompleteProfileModal(profile) {
       } else {
         errorEl.textContent = 'Xatolik yuz berdi. Qayta urinib ko\'ring.';
       }
+      return;
+    }
+
+    const { error: passError } = await VividDB.setPassword(password);
+    if (passError) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Saqlash va davom etish';
+      errorEl.textContent = 'Username saqlandi, lekin parolni o\'rnatib bo\'lmadi. Qayta urinib ko\'ring.';
       return;
     }
 
