@@ -354,6 +354,17 @@
 <p>31A · 32B · 33B.</p>
 <p>34B · 35C · 36A · 37B · 38A · 39B · 40C.</p></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 const TOTAL=40;
 const PART_TITLES={"1":"Part 1 – Questions 1–10","2":"Part 2 – Questions 11–20","3":"Part 3 – Questions 21–30","4":"Part 4 – Questions 31–40"};

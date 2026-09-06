@@ -385,6 +385,17 @@
 <div data-part="4"><p>Section 4. Office Design.</p>
 <p><span class="transcript-answer">typing</span> · individual <span class="transcript-answer">desks</span> · high or low <span class="transcript-answer">screens</span> · <span class="transcript-answer">share</span> a work area · lack of <span class="transcript-answer">privacy</span> and <span class="transcript-answer">security</span> · risk to <span class="transcript-answer">health</span> · rent and <span class="transcript-answer">energy</span> · make <span class="transcript-answer">training</span> staff easier · distracted by the <span class="transcript-answer">noise</span>.</p></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 
 

@@ -541,6 +541,14 @@ const C1_WORDS = [
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('reading.html?locked=1');
+  }
+})();
+</script>
 <script src="reading-test-common.js"></script>
 </body>
 </html>

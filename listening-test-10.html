@@ -358,6 +358,17 @@
 <div data-part="4"><p>Section 4. Drama activities in the classroom.</p>
 <p>Develops <span class="transcript-answer">confidence</span>. Take <span class="transcript-answer">risks</span>. Importance of <span class="transcript-answer">listening</span>. Makes children <span class="transcript-answer">responsible</span>. Form of <span class="transcript-answer">therapy</span>. <span class="transcript-answer">safe</span> environment. Understanding of <span class="transcript-answer">morality</span>. Active <span class="transcript-answer">participation</span>. Help children <span class="transcript-answer">remember</span>. Social <span class="transcript-answer">problems</span>.</p></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 
 const TOTAL=40;

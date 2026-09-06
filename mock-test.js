@@ -66,7 +66,7 @@ function buildMockReadingGroups(passages, size = 3) {
     groups.push({
       title: `Full Mock Reading Test ${groups.length + 1}`,
       part: `${chunk.length} Passages · ~${chunk.reduce((s, p) => s + p.questions, 0)} questions · 60 min`,
-      free: groups.length < 2, // birinchi 2 tasi bepul, qolgani premium — xohlasangiz o'zgartiring
+      free: false, // full mock tests are Premium-only
       href: chunk[0].href, // birinchi passage'dan boshlanadi
     });
   }
@@ -105,7 +105,7 @@ function renderReadingGrid() {
   if (!grid) return;
   const groups = buildMockReadingGroups(READING_PASSAGES, 3);
   grid.innerHTML = groups.map((g) => `
-    <a class="ielts-card" href="${g.href}">
+    <a class="ielts-card" href="${g.href}" ${g.free ? '' : 'data-premium-only'}>
       <div class="ielts-card-top">
         <span class="ielts-card-day">${g.title}</span>
         <span class="ielts-badge ${g.free ? 'free' : 'premium'}">${g.free ? 'Free' : 'Premium'}</span>
@@ -118,11 +118,11 @@ function renderReadingGrid() {
 function renderListeningGrid() {
   const grid = document.getElementById('mockListeningGrid');
   if (!grid) return;
-  grid.innerHTML = LISTENING_TESTS.map((t, idx) => `
-    <a class="ielts-card" href="${t.href}">
+  grid.innerHTML = LISTENING_TESTS.map((t) => `
+    <a class="ielts-card" href="${t.href}" data-premium-only>
       <div class="ielts-card-top">
         <span class="ielts-card-day">${t.title}</span>
-        <span class="ielts-badge ${idx < 2 ? 'free' : 'premium'}">${idx < 2 ? 'Free' : 'Premium'}</span>
+        <span class="ielts-badge premium">Premium</span>
       </div>
       <span class="ielts-card-part">${t.meta}</span>
     </a>
@@ -131,6 +131,7 @@ function renderListeningGrid() {
 
 renderReadingGrid();
 renderListeningGrid();
+if (typeof applyPremiumLocks === 'function') applyPremiumLocks();
 
 /* ============================================================
    WRITING — Timer, so'z sanash, yuborish (bepul, saytdan)

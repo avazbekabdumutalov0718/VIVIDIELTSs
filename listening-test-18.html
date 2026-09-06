@@ -361,6 +361,17 @@
 <div data-part="4"><p>Section 4. Plastics exhibition.</p>
 <p><span class="transcript-answer">cotton</span> · <span class="transcript-answer">milk</span> · artificial <span class="transcript-answer">silk</span> · produced in a <span class="transcript-answer">lab</span> · a <span class="transcript-answer">chemist</span> · becomes <span class="transcript-answer">hard</span> · acidic <span class="transcript-answer">gases</span> · degrade in <span class="transcript-answer">light</span> · recycled <span class="transcript-answer">pens</span> · substances in <span class="transcript-answer">wood</span>.</p></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 
 

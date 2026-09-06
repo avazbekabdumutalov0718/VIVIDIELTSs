@@ -510,6 +510,17 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 const TOTAL = 40;
 const PART_TITLES = {"1": "Part 1 &ndash; Questions 1&ndash;10", "2": "Part 2 &ndash; Questions 11&ndash;20", "3": "Part 3 &ndash; Questions 21&ndash;30", "4": "Part 4 &ndash; Questions 31&ndash;40"};

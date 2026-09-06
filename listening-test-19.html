@@ -375,6 +375,17 @@
 <div data-part="4"><p>Section 4. History of Fireworks in Europe.</p>
 <p><span class="transcript-answer">religion</span> · <span class="transcript-answer">nature</span> · human <span class="transcript-answer">flight</span> · formation of <span class="transcript-answer">stars</span> · <span class="transcript-answer">practical</span> uses · method of <span class="transcript-answer">education</span> · power of the <span class="transcript-answer">king</span> · provide <span class="transcript-answer">entertainment</span> · pattern as an <span class="transcript-answer">opera</span> · discoveries such as <span class="transcript-answer">electricity</span>.</p></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 
 

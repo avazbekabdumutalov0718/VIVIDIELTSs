@@ -362,6 +362,17 @@
 <div data-part="4"><p>Section 4. English Midlands manufacturing.</p>
 <p><span class="transcript-answer">land</span> · <span class="transcript-answer">industries</span> · <span class="transcript-answer">glass</span> · <span class="transcript-answer">salt</span> · <span class="transcript-answer">villages</span> · <span class="transcript-answer">local</span> clay · <span class="transcript-answer">fuel</span> · <span class="transcript-answer">waterproof</span> · <span class="transcript-answer">wastage</span> · <span class="transcript-answer">mixture</span>.</p></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 
 

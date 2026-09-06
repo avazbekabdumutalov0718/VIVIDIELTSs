@@ -363,6 +363,17 @@
 <div data-part="4"><p>Section 4. Canadian maple syrup.</p>
 <p>Temperatures very <span class="transcript-answer">different</span>. First used to cook <span class="transcript-answer">meat</span>. First Nations <span class="transcript-answer">tradition</span>. Hot stones produce <span class="transcript-answer">steam</span>. Remove layer of <span class="transcript-answer">ice</span>. Put in various types of <span class="transcript-answer">medicine</span>. After 1880 the <span class="transcript-answer">tax</span> was removed. Threatened by <span class="transcript-answer">insects</span>. A lot of <span class="transcript-answer">competition</span>. Considered a <span class="transcript-answer">healthy</span> product.</p></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 const TOTAL=40;
 const PART_TITLES={"1":"Part 1 – Questions 1–10","2":"Part 2 – Questions 11–20","3":"Part 3 – Questions 21–30","4":"Part 4 – Questions 31–40"};

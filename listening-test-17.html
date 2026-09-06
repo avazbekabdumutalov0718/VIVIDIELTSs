@@ -368,6 +368,17 @@
 <div data-part="4"><p>Section 4. Impact of cars in Australia.</p>
 <p><span class="transcript-answer">public</span> transport · buses <span class="transcript-answer">uncomfortable</span> · associated with <span class="transcript-answer">freedom</span> · high <span class="transcript-answer">taxes</span> · new <span class="transcript-answer">government</span> · streets <span class="transcript-answer">polluted</span> · more <span class="transcript-answer">lanes</span> · affected <span class="transcript-answer">relationships</span> · new <span class="transcript-answer">advertisements</span> · <span class="transcript-answer">shopping malls</span>.</p></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 
 

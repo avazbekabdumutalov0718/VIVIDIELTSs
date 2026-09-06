@@ -367,6 +367,17 @@
 <div data-part="4"><p>Section 4. Working as a Patent Attorney.</p>
 <p>Most patents applied for by a <span class="transcript-answer">company</span>. Invention has to be <span class="transcript-answer">original</span>. Detailed <span class="transcript-answer">description</span>. Chemistry or <span class="transcript-answer">engineering</span>. Very good <span class="transcript-answer">communication</span>. Different <span class="transcript-answer">language</span>. Good <span class="transcript-answer">salary</span>. Sometimes quite <span class="transcript-answer">lonely</span>. <span class="transcript-answer">industrial</span> departments. <span class="transcript-answer">government</span>.</p></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 const TOTAL=40;
 const PART_TITLES={"1":"Part 1 – Questions 1–10","2":"Part 2 – Questions 11–20","3":"Part 3 – Questions 21–30","4":"Part 4 – Questions 31–40"};

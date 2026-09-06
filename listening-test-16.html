@@ -382,6 +382,17 @@
 <div data-part="4"><p>Section 4. Theories of intelligence.</p>
 <p>No change during a person’s <span class="transcript-answer">life</span> · intelligence of <span class="transcript-answer">twins</span> · similar <span class="transcript-answer">experiences</span> · an <span class="transcript-answer">improvement</span> · e.g. <span class="transcript-answer">musical</span> · parts of the <span class="transcript-answer">brain</span> · identifying a <span class="transcript-answer">face</span> · there is <span class="transcript-answer">interaction</span> · affect <span class="transcript-answer">spelling</span> · learnt as a <span class="transcript-answer">song</span>.</p></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="db.js"></script>
+<script src="auth-guard.js"></script>
+<script>
+(async function () {
+  if (typeof requirePremium === 'function') {
+    await requirePremium('listening.html?locked=1');
+  }
+})();
+</script>
 <script>
 
 
