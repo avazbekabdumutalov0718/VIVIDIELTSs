@@ -86,34 +86,6 @@ const VividDB = (() => {
     return { data, error };
   }
 
-  // Log in with a username (set once via the "complete your profile" step)
-  // instead of an email. Looks the username up via a public Edge Function
-  // that maps it to the account's internal (synthetic) email, then signs in
-  // normally. Requires the `resolve-username` Edge Function to be deployed.
-  async function signInWithUsername(username, password) {
-    if (!client) return { error: { message: 'Supabase is not configured yet (see supabase-config.js).' } };
-    const clean = String(username || '').trim().toLowerCase().replace(/^@+/, '');
-    const { data, error } = await client.functions.invoke('resolve-username', { body: { username: clean } });
-    if (error || !data?.email) {
-      let message = "Bunday username topilmadi.";
-      try {
-        const body = await error.context.json();
-        if (body?.error) message = body.error;
-      } catch (e) {}
-      return { error: { message } };
-    }
-    return await signIn(data.email, password);
-  }
-
-  // Sets/changes the password for the CURRENTLY signed-in user (used right
-  // after Telegram login, so the user can log in with username+password
-  // next time instead of asking the bot for a new code every time).
-  async function setPassword(password) {
-    if (!client) return { error: { message: 'Supabase is not configured yet (see supabase-config.js).' } };
-    const { data, error } = await client.auth.updateUser({ password });
-    return { data, error };
-  }
-
   async function signInWithGoogle() {
     if (!client) return { error: { message: 'Supabase is not configured yet (see supabase-config.js).' } };
     const { data, error } = await client.auth.signInWithOAuth({
@@ -123,20 +95,12 @@ const VividDB = (() => {
     return { data, error };
   }
 
-  // Exchanges a 6-digit code (sent to the user by the @vividielts_bot /login command)
-  // for a Supabase session. Requires the `telegram-code-login` Supabase Edge Function.
-  async function signInWithTelegramCode(code) {
+  // Exchanges a verified Telegram Login Widget payload for a Supabase session.
+  // Requires the `telegram-auth` Supabase Edge Function (see /supabase/functions/telegram-auth).
+  async function signInWithTelegram(telegramUser) {
     if (!client) return { error: { message: 'Supabase is not configured yet (see supabase-config.js).' } };
-    const { data, error } = await client.functions.invoke('telegram-code-login', { body: { code } });
-    if (error) {
-      // Edge Function returned a non-2xx status — try to surface its JSON message.
-      let message = error.message || 'Could not verify that code.';
-      try {
-        const body = await error.context.json();
-        if (body?.error) message = body.error;
-      } catch (e) {}
-      return { error: { message } };
-    }
+    const { data, error } = await client.functions.invoke('telegram-auth', { body: telegramUser });
+    if (error) return { error };
     if (data?.action_link) {
       window.location.href = data.action_link;
       return { data };
@@ -171,9 +135,8 @@ const VividDB = (() => {
 
   async function updateProfile(fields) {
     const user = await getUser();
-    if (!client || !user) return { error: null };
-    const { data, error } = await client.from('profiles').update(fields).eq('id', user.id).select().maybeSingle();
-    return { data, error };
+    if (!client || !user) return;
+    await client.from('profiles').update(fields).eq('id', user.id);
   }
 
   // ---------- VOCAB PROGRESS ----------
@@ -270,6 +233,108 @@ const VividDB = (() => {
     return data || [];
   }
 
+  // ---------- COMMUNITY (real, shared across every user — no fake/local data) ----------
+  async function getCommunityPosts() {
+    if (!client) return [];
+    const { data: posts, error } = await client
+      .from('community_posts')
+      .select('id, user_id, author_name, channel, body, created_at')
+      .order('created_at', { ascending: false });
+    if (error) { console.error('getCommunityPosts', error); return []; }
+
+    const { data: likes } = await client.from('community_likes').select('post_id, user_id');
+    const { data: comments } = await client
+      .from('community_comments')
+      .select('id, post_id, user_id, author_name, body, created_at')
+      .order('created_at', { ascending: true });
+
+    const user = await getUser();
+    return (posts || []).map((p) => {
+      const postLikes = (likes || []).filter((l) => l.post_id === p.id);
+      return {
+        id: p.id,
+        userId: p.user_id,
+        author: p.author_name,
+        channel: p.channel,
+        text: p.body,
+        ts: new Date(p.created_at).getTime(),
+        likes: postLikes.length,
+        likedByMe: !!user && postLikes.some((l) => l.user_id === user.id),
+        comments: (comments || [])
+          .filter((c) => c.post_id === p.id)
+          .map((c) => ({ id: c.id, userId: c.user_id, author: c.author_name, text: c.body, ts: new Date(c.created_at).getTime() })),
+      };
+    });
+  }
+
+  async function createCommunityPost(text, channel) {
+    const user = await getUser();
+    if (!client || !user) return { error: { message: 'not-logged-in' } };
+    const profile = await getProfile();
+    const authorName = profile?.full_name || 'IELTS Student';
+    const { data, error } = await client
+      .from('community_posts')
+      .insert({ user_id: user.id, author_name: authorName, channel, body: text })
+      .select()
+      .single();
+    return { data, error };
+  }
+
+  async function deleteCommunityPost(postId) {
+    const user = await getUser();
+    if (!client || !user) return { error: { message: 'not-logged-in' } };
+    const { error } = await client.from('community_posts').delete().eq('id', postId).eq('user_id', user.id);
+    return { error };
+  }
+
+  async function toggleCommunityLike(postId, currentlyLiked) {
+    const user = await getUser();
+    if (!client || !user) return { error: { message: 'not-logged-in' } };
+    if (currentlyLiked) {
+      await client.from('community_likes').delete().eq('post_id', postId).eq('user_id', user.id);
+    } else {
+      await client.from('community_likes').insert({ post_id: postId, user_id: user.id });
+    }
+    return { success: true };
+  }
+
+  async function addCommunityComment(postId, text) {
+    const user = await getUser();
+    if (!client || !user) return { error: { message: 'not-logged-in' } };
+    const profile = await getProfile();
+    const authorName = profile?.full_name || 'IELTS Student';
+    const { data, error } = await client
+      .from('community_comments')
+      .insert({ post_id: postId, user_id: user.id, author_name: authorName, body: text })
+      .select()
+      .single();
+    return { data, error };
+  }
+
+  // Real member count (no more made-up "128 learners online")
+  async function getCommunityMemberCount() {
+    if (!client) return 0;
+    const { count, error } = await client.from('profiles').select('*', { count: 'exact', head: true });
+    if (error) { console.error('getCommunityMemberCount', error); return 0; }
+    return count || 0;
+  }
+
+  // Real top contributors, ranked by actual number of posts — no invented streaks
+  async function getCommunityTopContributors(limit = 5) {
+    if (!client) return [];
+    const { data, error } = await client.from('community_posts').select('user_id, author_name');
+    if (error || !data) return [];
+    const counts = {};
+    data.forEach((row) => {
+      const key = row.user_id;
+      if (!counts[key]) counts[key] = { name: row.author_name, count: 0 };
+      counts[key].count += 1;
+    });
+    return Object.values(counts)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, limit);
+  }
+
   // ---------- UI FEEDBACK ----------
   function showSavedToast(message) {
     removePersistentStatusBanner();
@@ -307,7 +372,7 @@ const VividDB = (() => {
   }
 
   return {
-    isConfigured, signUp, signIn, signInWithGoogle, signInWithTelegramCode, signInWithUsername, setPassword, signOut, getSession, getUser,
+    isConfigured, signUp, signIn, signInWithGoogle, signInWithTelegram, signOut, getSession, getUser,
     getProfile, updateProfile,
     getLearnedWordIds, markWordLearned, unmarkWordLearned,
     getCollocationProgress, markCollocationUnitCompleted,
@@ -315,5 +380,9 @@ const VividDB = (() => {
     saveReadingResult, getReadingResults,
     saveUserState, loadUserState,
     showSavedToast, getConnectionStatus,
+    getCommunityPosts, createCommunityPost, deleteCommunityPost,
+    toggleCommunityLike, addCommunityComment,
+    getCommunityMemberCount, getCommunityTopContributors,
+    getClient: () => client,
   };
 })();

@@ -53,7 +53,7 @@ if (loginForm) {
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!loginForm.checkValidity()) { loginForm.reportValidity(); return; }
-    const identifier = loginForm.email.value.trim();
+    const email = loginForm.email.value.trim();
     const password = loginForm.password.value;
 
     if (typeof VividDB === 'undefined' || !VividDB.isConfigured) {
@@ -63,11 +63,8 @@ if (loginForm) {
     }
 
     setStatus('Logging you in...', false);
-    // If it looks like an email, sign in with email; otherwise treat it as a username.
-    const result = identifier.includes('@') && identifier.includes('.')
-      ? await VividDB.signIn(identifier, password)
-      : await VividDB.signInWithUsername(identifier, password);
-    if (result.error) { setStatus(result.error.message, true); return; }
+    const { error } = await VividDB.signIn(email, password);
+    if (error) { setStatus(error.message, true); return; }
     setStatus('Welcome back!', false);
     window.location.href = 'dashboard.html';
   });
