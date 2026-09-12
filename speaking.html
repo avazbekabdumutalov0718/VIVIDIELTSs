@@ -18,12 +18,11 @@
   .dash-nav-item[href="dashboard.html"] .dash-nav-icon{ background: rgba(124,92,252,0.22); }
   .dash-nav-item[href="vocabulary.html"] .dash-nav-icon{ background: rgba(255,90,95,0.2); }
   .dash-nav-item[href="grammar.html"] .dash-nav-icon{ background: rgba(0,194,209,0.2); }
-  .dash-nav-item[href="listening.html"] .dash-nav-icon{ background: rgba(103,166,255,0.22); }
   .dash-nav-item[href="reading.html"] .dash-nav-icon{ background: rgba(255,176,103,0.22); }
-  .dash-nav-item[href="writing.html"] .dash-nav-icon{ background: rgba(255,90,95,0.2); }
-  .dash-nav-item[href="speaking.html"] .dash-nav-icon{ background: rgba(255,199,89,0.22); }
-  .dash-nav-item[href="tests-exams.html"] .dash-nav-icon{ background: rgba(120,200,150,0.22); }
+  .dash-nav-item[href="speaking.html"] .dash-nav-icon{ background: rgba(124,92,252,0.22); }
   .dash-nav-item[href="progress.html"] .dash-nav-icon{ background: rgba(103,215,255,0.22); }
+  .dash-nav-item[href="roadmap.html"] .dash-nav-icon{ background: rgba(255,199,89,0.24); }
+  .dash-nav-item[href="community.html"] .dash-nav-icon{ background: rgba(255,138,196,0.22); }
   .dash-nav-icon svg{ width: 16px; height: 16px; }
 
   .upgrade-card.ielts-style{
@@ -43,25 +42,6 @@
     font-size: 0.88rem;
   }
   #speakingBackBtn:hover { background: #eef2ff; border-color: #c7d2fe; color: #4338ca; }
-
-  /* ===== Mock Test CTA button (links to speaking-mock.html) ===== */
-  .speaking-mock-cta{
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: 999px;
-    background: linear-gradient(135deg, #7c5cfc, #ff5a5f);
-    color: #fff;
-    font-weight: 700;
-    font-size: 0.88rem;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(124,92,252,.28);
-    transition: transform .15s ease, box-shadow .15s ease;
-  }
-  .speaking-mock-cta:hover{ transform: translateY(-2px); box-shadow: 0 8px 20px rgba(124,92,252,.36); color:#fff; }
 
   /* ===== Speaking-specific styles ===== */
   .speaking-topic-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:16px; }
@@ -148,24 +128,15 @@
       <a href="speaking.html" class="dash-nav-item active"><span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 10.5v.7a6.5 6.5 0 0 0 13 0v-.7"/><path d="M12 17.7v3.3"/><path d="M8.5 21h7"/></svg></span> Speaking</a>
       <a href="tests-exams.html" class="dash-nav-item"><span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2.5H6.5a1.5 1.5 0 0 0-1.5 1.5v16a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M14 2.5V8h5.5"/><path d="M9 14.5l2 2 4-4"/></svg></span> Tests &amp; Exams</a>
       <a href="progress.html" class="dash-nav-item"><span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 20.5V11"/><path d="M12 20.5V4.5"/><path d="M19.5 20.5v-7"/></svg></span> Progress</a>
-      <a href="#" class="dash-nav-item disabled"><span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.4 4.3 5.6 4.3 9s-1.5 6.6-4.3 9c-2.8-2.4-4.3-5.6-4.3-9s1.5-6.6 4.3-9z"/></svg></span> Community <span class="soon-pill">Soon</span></a>
+            <a href="roadmap.html" class="dash-nav-item">
+        <span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20.5 9.5 8l4 7 2.5-4.5 5 10z"/><path d="M17.5 5.5v4M15.5 7.5h4"/></svg></span> Roadmap
+      </a>
+      <a href="community.html" class="dash-nav-item">
+        <span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.4 4.3 5.6 4.3 9s-1.5 6.6-4.3 9c-2.8-2.4-4.3-5.6-4.3-9s1.5-6.6 4.3-9z"/></svg></span> Community
+      </a>
     </nav>
     <div class="dash-sidebar-bottom">
-      <div class="sidebar-illustration" aria-hidden="true">
-        <svg viewBox="0 0 220 140" role="presentation">
-          <rect x="40" y="58" width="58" height="42" rx="10" fill="#f2c96b"/>
-          <rect x="54" y="46" width="58" height="42" rx="10" fill="#6d7cff"/>
-          <rect x="70" y="34" width="58" height="42" rx="10" fill="#1d3b6f"/>
-          <rect x="98" y="44" width="70" height="52" rx="12" fill="#f7f8ff" stroke="#dfe5ff" stroke-width="2"/>
-          <path d="M116 62h34" stroke="#1d3b6f" stroke-width="4" stroke-linecap="round"/>
-          <path d="M116 74h26" stroke="#6d7cff" stroke-width="4" stroke-linecap="round"/>
-          <path d="M152 22l18 18" stroke="#7ad7c8" stroke-width="6" stroke-linecap="round"/>
-          <path d="M166 20l16 16" stroke="#ffd76d" stroke-width="6" stroke-linecap="round"/>
-          <path d="M164 40l14 8" stroke="#ff8f6b" stroke-width="5" stroke-linecap="round"/>
-          <path d="M108 104c12-8 24-10 36-8" stroke="#8da0ff" stroke-width="4" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <a href="#pricing" class="upgrade-card ielts-style">
+      <a href="#" class="upgrade-card ielts-style">
         <span class="upgrade-title">✨ Get Premium</span>
         <span class="upgrade-sub">3 full mock exams + speaking review</span>
       </a>
@@ -200,9 +171,8 @@
         </div>
       </div>
 
-      <div class="reading-nav-shell" style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap;">
+      <div class="reading-nav-shell" style="display:flex; align-items:center; gap:12px; margin-bottom:18px;">
         <button id="speakingBackBtn" type="button" style="display:none;">← Orqaga</button>
-        <a href="speaking-mock.html" class="speaking-mock-cta">🎤 Mock Testni boshlash</a>
       </div>
 
       <div id="speakingRoot"></div>
@@ -218,6 +188,7 @@
 <script src="script.js"></script>
 <script src="dashboard.js"></script>
 <script src="speaking-data.js"></script>
+<script src="mock-exams-data.js"></script>
 <script src="speaking.js"></script>
 <script>
   if (typeof applyPremiumLocks === 'function') {

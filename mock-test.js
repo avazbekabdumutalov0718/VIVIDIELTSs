@@ -39,12 +39,8 @@ const READING_PASSAGES = [
   { id: 'passage-4', title: 'The Blockbuster Phenomenon', part: 'Passage 1', questions: 13, href: 'reading-test-4.html' },
   { id: 'passage-5', title: 'The lost animals of Australia', part: 'Passage 3', questions: 14, href: 'reading-test-5.html' },
   { id: 'passage-6', title: 'The Blockbuster Phenomenon: a new museum trend', part: 'Passage 1', questions: 13, href: 'reading-test-6.html' },
-  { id: 'passage-7', title: 'The Cause of Linguistic Change', part: 'Passage 3', questions: 14, href: 'reading-test-7.html' },
   { id: 'passage-8', title: 'Traditional Maori Medicine', part: 'Passage 1', questions: 13, href: 'reading-test-8.html' },
   { id: 'passage-9', title: 'Improving Patient Safety', part: 'Passage 3', questions: 14, href: 'reading-test-9.html' },
-  { id: 'passage-10', title: 'Why Should We Study History?', part: 'Passage 1', questions: 13, href: 'reading-test-10.html' },
-  { id: 'passage-11', title: 'Bees and Pollination', part: 'Passage 2', questions: 13, href: 'reading-test-11.html' },
-  { id: 'passage-12', title: 'A New Stage in the Study and Teaching of History', part: 'Passage 3', questions: 14, href: 'reading-test-12.html' },
   { id: 'passage-13', title: 'Antarctic Research', part: 'Passage 2', questions: 13, href: 'reading-test-13.html' },
   { id: 'passage-14', title: 'Violins and Very Cold Weather – A Hypothesis', part: 'Passage 2', questions: 13, href: 'reading-test-14.html' },
   { id: 'passage-15', title: 'Game Theory', part: 'Passage 3', questions: 14, href: 'reading-test-15.html' },
@@ -53,9 +49,6 @@ const READING_PASSAGES = [
   { id: 'passage-18', title: 'The Return of Monkey Life', part: 'Passage 2', questions: 13, href: 'reading-test-18.html' },
   { id: 'passage-19', title: 'European Heatwave of Summer 2003', part: 'Passage 2', questions: 13, href: 'reading-test-19.html' },
   { id: 'passage-20', title: 'Research into the Effects of Different Teaching Styles', part: 'Passage 3', questions: 14, href: 'reading-test-20.html' },
-  { id: 'passage-21', title: 'Roman Tunnels', part: 'Passage 1', questions: 13, href: 'reading-test-21.html' },
-  { id: 'passage-22', title: 'Research Using Twins', part: 'Passage 2', questions: 13, href: 'reading-test-22.html' },
-  { id: 'passage-23', title: 'An Introduction to Film Sound', part: 'Passage 3', questions: 14, href: 'reading-test-23.html' },
 ];
 
 function buildMockReadingGroups(passages, size = 3) {

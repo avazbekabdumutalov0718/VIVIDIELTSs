@@ -5,7 +5,3 @@
 
 const SUPABASE_URL = 'https://dopccjigpfhukjthrvnf.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_468151fmhwrkteGeN1J23A_opBgehxg';
-
-// Telegram login works via a bot command (@vividielts_bot → /login → 6-digit
-// code typed into the site) rather than a widget, so no config is needed
-// here. Setup walkthrough: /supabase/functions/telegram-code-login/README.md
