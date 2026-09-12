@@ -8,6 +8,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script>
+  // apply saved theme immediately, before paint, to avoid a light-mode flash
+  (function(){
+    var t = localStorage.getItem('vivid-theme');
+    if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+  })();
+</script>
 </head>
 <body>
 
@@ -25,6 +32,10 @@
       <a href="#community">Community</a>
     </nav>
     <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" type="button">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
       <a href="auth.html" class="btn btn-ghost">Log in</a>
       <a href="auth.html" class="btn btn-primary">Start free</a>
     </div>
@@ -36,6 +47,11 @@
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-bg">
+    <video autoplay muted loop playsinline>
+      <source src="assets/206779_medium.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="hero-inner">
     <div class="hero-copy">
       <p class="eyebrow">3,500+ words · 40+ grammar topics · AI Mentor</p>
@@ -88,6 +104,34 @@
       <span>MATCHING HEADINGS</span><span>·</span><span>TASK 2 ESSAY</span><span>·</span><span>DICTATION</span><span>·</span><span>CUE CARD</span><span>·</span><span>COLLOCATIONS</span><span>·</span><span>SKIMMING</span><span>·</span><span>PASSIVE VOICE</span><span>·</span><span>BAND DESCRIPTOR</span><span>·</span>
     </div>
   </div>
+</section>
+
+<!-- FEEDBACK / TESTIMONIALS -->
+<section class="feedback" id="feedback">
+  <div class="section-head">
+    <p class="eyebrow">Feedback</p>
+    <h2>O'quvchilarimiz nima deydi<span class="grad-text vivid">.</span></h2>
+    <p class="section-sub">Real learners, real band score gains — in their own words.</p>
+  </div>
+
+  <div class="feedback-carousel" id="feedbackCarousel">
+    <button class="feedback-arrow feedback-arrow-prev" id="feedbackPrev" aria-label="Previous">‹</button>
+
+    <div class="feedback-card" id="feedbackCard">
+      <span class="feedback-lang" id="feedbackLang"></span>
+      <p class="feedback-quote" id="feedbackQuote"></p>
+      <div class="feedback-person">
+        <span class="feedback-avatar" id="feedbackAvatar"></span>
+        <div>
+          <div class="feedback-name" id="feedbackName"></div>
+          <div class="feedback-meta" id="feedbackMeta"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="feedback-arrow feedback-arrow-next" id="feedbackNext" aria-label="Next">›</button>
+  </div>
+  <p class="feedback-counter" id="feedbackCounter"></p>
 </section>
 
 <!-- FEATURES -->
@@ -244,15 +288,11 @@
     <button class="pay-modal-close" id="payModalClose" aria-label="Close">&times;</button>
     <p class="eyebrow">Checkout</p>
     <h3 id="payModalPlan">Get Premium</h3>
-    <p class="pay-modal-sub">Choose a payment method to continue.</p>
+    <p class="pay-modal-sub">To'lovni Telegram bot orqali amalga oshiring.</p>
     <div class="pay-methods">
-      <button class="pay-method" data-method="payme">
-        <span class="pay-method-name">Payme</span>
-        <span class="pay-method-hint">Redirect to Payme checkout</span>
-      </button>
-      <button class="pay-method" data-method="click">
-        <span class="pay-method-name">Click</span>
-        <span class="pay-method-hint">Redirect to Click checkout</span>
+      <button class="pay-method" data-method="telegram">
+        <span class="pay-method-name">Telegram bot orqali to'lash</span>
+        <span class="pay-method-hint">@vividielts_bot ga o'tasiz va ko'rsatmalarga amal qilasiz</span>
       </button>
     </div>
     <p class="pay-modal-status" id="payModalStatus"></p>

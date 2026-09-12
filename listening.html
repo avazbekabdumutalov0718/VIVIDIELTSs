@@ -24,6 +24,8 @@
   .dash-nav-item[href="speaking.html"] .dash-nav-icon{ background: rgba(255,199,89,0.22); }
   .dash-nav-item[href="mock-test.html"] .dash-nav-icon{ background: rgba(120,200,150,0.22); }
   .dash-nav-item[href="progress.html"] .dash-nav-icon{ background: rgba(103,215,255,0.22); }
+  .dash-nav-item[href="roadmap.html"] .dash-nav-icon{ background: rgba(255,199,89,0.24); }
+  .dash-nav-item[href="community.html"] .dash-nav-icon{ background: rgba(255,138,196,0.22); }
   .dash-nav-icon svg{ width: 16px; height: 16px; }
 
   #readingBackBtn {
@@ -47,6 +49,73 @@
     border: none; border-radius: 14px; padding: 14px 16px;
     display:flex; flex-direction:column; align-items:flex-start; gap:2px;
   }
+
+  /* ===== IELTStation-inspired Listening page redesign (added) ===== */
+  :root{ --listening-accent: #3B82F6; }
+
+  /* Top pill tab(s) — Listening only shows "Real-Exam", no Cambridge/Mock */
+  .reading-toptabs{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom: 20px; }
+  .reading-toptab{
+    display:flex; align-items:center; gap:8px;
+    padding: 11px 20px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface);
+    font-weight:700; font-size:0.9rem; color: var(--ink-soft);
+    cursor:pointer; transition: all .15s ease;
+  }
+  .reading-toptab.active{
+    background: var(--listening-accent); border-color: var(--listening-accent); color:#fff;
+    box-shadow: 0 8px 20px rgba(59,130,246,0.28);
+  }
+
+  /* Sub tab — "🎧 Listening" only, mirrors reading's subtab row */
+  .reading-subtabs{ display:flex; gap:24px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+  .reading-subtab{
+    padding: 10px 2px 14px; font-weight:700; font-size:0.95rem; color: var(--ink-soft);
+    cursor:pointer; border-bottom: 2px solid transparent; display:flex; align-items:center; gap:6px;
+  }
+  .reading-subtab.active{ color: var(--listening-accent); border-bottom-color: var(--listening-accent); }
+
+  .listening-toolbar{ display:flex; gap:12px; margin-bottom: 22px; flex-wrap:wrap; }
+  .listening-search{
+    flex:1; min-width:240px; display:flex; align-items:center; gap:10px;
+    background: var(--surface); border:1px solid var(--line); border-radius:12px;
+    padding: 11px 16px; color: var(--ink-soft);
+  }
+  .listening-search svg{ flex-shrink:0; }
+  .listening-search input{ border:none; outline:none; background:transparent; font-family:var(--font-body); font-size:0.92rem; flex:1; color: var(--ink); }
+  .listening-filter{
+    padding: 11px 16px; border-radius:12px; border:1px solid var(--line);
+    background: var(--surface); font-family: var(--font-body); font-size:0.9rem; color: var(--ink-soft);
+    cursor:pointer;
+  }
+
+  .listening-section-title{ font-size:1.1rem; font-weight:700; margin: 0 0 16px; color: var(--ink); }
+
+  /* smaller "Day N"-style cards, 4 per row instead of the old oversized 3-column grid */
+  .ielts-card-grid.listening-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap:14px; }
+  .ielts-card.listening-card{
+    position:relative; background: var(--surface); border:1px solid var(--line); border-radius: 16px;
+    padding: 18px; display:flex; flex-direction:column; gap:10px;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    cursor:pointer; text-decoration:none;
+  }
+  .ielts-card.listening-card:hover{ transform: translateY(-3px); box-shadow: var(--shadow); border-color: rgba(59,130,246,0.35); }
+  .ielts-card.listening-card .ielts-card-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
+  .ielts-card.listening-card .ielts-card-day{ font-weight:700; font-size:0.95rem; color: var(--ink); line-height:1.35; }
+  .ielts-card.listening-card .ielts-card-part{ font-family: var(--font-mono); font-size:0.76rem; color: var(--ink-soft); }
+  .ielts-card.listening-card .ielts-card-desc{ font-size:0.8rem; color: var(--ink-soft); line-height:1.4; }
+  .ielts-card.listening-card .ielts-card-cta{ margin-top:auto; font-size:0.8rem; font-weight:700; color: var(--listening-accent); }
+
+  .ielts-badge.free{ background: rgba(0,194,209,0.14); color:#08838d; }
+  .ielts-badge.premium{ background: #ffe6a8; color:#8a5a00; }
+  .ielts-badge{
+    flex-shrink:0; font-size:0.68rem; font-weight:700; padding:4px 10px; border-radius:999px;
+    text-transform:uppercase; letter-spacing:0.02em;
+  }
+
+  @media (max-width: 1100px){ .ielts-card-grid.listening-grid{ grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 800px){ .ielts-card-grid.listening-grid{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px){ .ielts-card-grid.listening-grid{ grid-template-columns: 1fr; } }
 </style>
 </head>
 <body class="dash-body">
@@ -68,7 +137,12 @@
       <a href="speaking.html" class="dash-nav-item"><span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 10.5v.7a6.5 6.5 0 0 0 13 0v-.7"/><path d="M12 17.7v3.3"/><path d="M8.5 21h7"/></svg></span> Speaking</a>
       <a href="tests-exams.html" class="dash-nav-item"><span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2.5H6.5a1.5 1.5 0 0 0-1.5 1.5v16a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M14 2.5V8h5.5"/><path d="M9 14.5l2 2 4-4"/></svg></span> Tests &amp; Exams</a>
       <a href="progress.html" class="dash-nav-item"><span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 20.5V11"/><path d="M12 20.5V4.5"/><path d="M19.5 20.5v-7"/></svg></span> Progress</a>
-      <a href="#" class="dash-nav-item disabled"><span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.4 4.3 5.6 4.3 9s-1.5 6.6-4.3 9c-2.8-2.4-4.3-5.6-4.3-9s1.5-6.6 4.3-9z"/></svg></span> Community <span class="soon-pill">Soon</span></a>
+            <a href="roadmap.html" class="dash-nav-item">
+        <span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20.5 9.5 8l4 7 2.5-4.5 5 10z"/><path d="M17.5 5.5v4M15.5 7.5h4"/></svg></span> Roadmap
+      </a>
+      <a href="community.html" class="dash-nav-item">
+        <span class="dash-nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.8 2.4 4.3 5.6 4.3 9s-1.5 6.6-4.3 9c-2.8-2.4-4.3-5.6-4.3-9s1.5-6.6 4.3-9z"/></svg></span> Community
+      </a>
     </nav>
     <div class="dash-sidebar-bottom">
       <div class="sidebar-illustration" aria-hidden="true">

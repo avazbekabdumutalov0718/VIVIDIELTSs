@@ -168,30 +168,79 @@
 
   const state = {
     view: 'home',
-    stack: []
+    stack: [],
+    searchTerm: '',
+    sort: 'default'
   };
 
   const navRoot = document.getElementById('listeningNavigator');
   const backBtn = document.getElementById('readingBackBtn');
 
   function renderHome() {
-    const items = listeningDatabase.single;
+    const term = state.searchTerm ? state.searchTerm.trim().toLowerCase() : '';
+    let items = listeningDatabase.single.filter((item) =>
+      !term || item.title.toLowerCase().includes(term)
+    );
+    if (state.sort === 'az') {
+      items = [...items].sort((a, b) => a.title.localeCompare(b.title));
+    }
 
     navRoot.innerHTML = `
-      <div class="unit-grid reading-grid">
-        ${items.map((item, idx) => {
-          const isFree = idx < 2;
+      <div class="reading-toptabs">
+        <span class="reading-toptab active">Real-Exam</span>
+      </div>
+
+      <div class="reading-subtabs">
+        <span class="reading-subtab active">🎧 Listening</span>
+      </div>
+
+      <div class="listening-toolbar">
+        <div class="listening-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="text" id="listeningSearchInput" placeholder="Search listening tests..." value="${state.searchTerm || ''}">
+        </div>
+        <select class="listening-filter" id="listeningSortSelect">
+          <option value="default"${state.sort !== 'az' ? ' selected' : ''}>Default order</option>
+          <option value="az"${state.sort === 'az' ? ' selected' : ''}>Title A–Z</option>
+        </select>
+      </div>
+
+      <div class="listening-section-title">Listening Question Sets</div>
+
+      <div class="ielts-card-grid listening-grid" id="listeningCardGrid">
+        ${items.length === 0 ? `<p style="color:var(--ink-soft); grid-column:1/-1;">Hech narsa topilmadi.</p>` : items.map((item) => {
+          const originalIdx = listeningDatabase.single.indexOf(item);
+          const isFree = originalIdx < 2;
           return `
-          <a href="${item.href}" class="unit-card reading-card" ${isFree ? '' : 'data-premium-only'}>
-            <span class="unit-card-num">${item.meta}</span>
-            <span class="unit-card-title">${item.title}</span>
-            <span class="unit-card-count">${item.description}</span>
-            <span class="reading-card-cta">${isFree ? 'Open test →' : '🔒 Premium'}</span>
+          <a href="${item.href}" class="ielts-card listening-card" ${isFree ? '' : 'data-premium-only'}>
+            <div class="ielts-card-top">
+              <span class="ielts-card-day">${item.title}</span>
+              ${isFree ? '<span class="ielts-badge free">Free</span>' : '<span class="ielts-badge premium">Premium</span>'}
+            </div>
+            <span class="ielts-card-part">${item.meta}</span>
+            <span class="ielts-card-desc">${item.description}</span>
+            <span class="ielts-card-cta">${isFree ? 'Open test →' : '🔒 Premium'}</span>
           </a>
         `;
         }).join('')}
       </div>
     `;
+
+    const searchInput = document.getElementById('listeningSearchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        state.searchTerm = e.target.value;
+        renderHome();
+        document.getElementById('listeningSearchInput').focus();
+      });
+    }
+    const sortSelect = document.getElementById('listeningSortSelect');
+    if (sortSelect) {
+      sortSelect.addEventListener('change', (e) => {
+        state.sort = e.target.value;
+        renderHome();
+      });
+    }
 
     if (typeof applyPremiumLocks === 'function') applyPremiumLocks();
   }
